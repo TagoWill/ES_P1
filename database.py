@@ -8,6 +8,7 @@ Base = declarative_base()
 class User(Base):
     __tablename__ = 'user'
     userid = Column(Integer, primary_key=True)
+    type = Column(String(250), nullable=False)
     name = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     password = Column(String(250), nullable=False)
@@ -33,7 +34,6 @@ class Dealership(Base):
     seller = relationship(User)
 
 # Create an engine that stores data in the local directory's
-# sqlalchemy_example.db file.
 engine = create_engine('sqlite:///project1_sqlalchemy_db.db')
 
 # Create all tables in the engine. This is equivalent to "Create Table"

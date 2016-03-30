@@ -19,12 +19,12 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Insert a User
-new_user = User(name='daniel', email='dbastos@gmail.pt', password='123')
+new_user = User(name='daniel', type='owner', email='dbastos@gmail.pt', password='123')
 session.add(new_user)
 session.commit()
 
 # Insert a User
-new_user2 = User(name='tiago', email='tiago@gmail.pt', password='123')
+new_user2 = User(name='tiago', type='client', email='tiago@gmail.pt', password='123')
 session.add(new_user2)
 session.commit()
 
