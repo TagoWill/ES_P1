@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from database import User, Base, Car, Dealership
 
-engine = create_engine('sqlite:///project1_sqlalchemy_db.db')
+engine = create_engine('sqlite:///C:\\Users\\Faculudade2015-2016\\ES_P1\\project1_sqlalchemy_db.db')
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
 Base.metadata.bind = engine
@@ -37,3 +37,5 @@ session.commit()
 new_deal = Dealership(contact=999999999, district='Coimbra', location_lat=40.1, location_long=-8.4, seller=new_user)
 session.add(new_deal)
 session.commit()
+
+session.close()

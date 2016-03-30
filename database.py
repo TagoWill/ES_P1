@@ -34,7 +34,7 @@ class Dealership(Base):
 
 # Create an engine that stores data in the local directory's
 # sqlalchemy_example.db file.
-engine = create_engine('sqlite:///project1_sqlalchemy_db.db')
+engine = create_engine('sqlite:///C:\\Users\\Faculudade2015-2016\\ES_P1\\project1_sqlalchemy_db.db')
 
 # Create all tables in the engine. This is equivalent to "Create Table"
 # statements in raw SQL.
