@@ -9,6 +9,7 @@ class User(Base):
     __tablename__ = 'user'
     userid = Column(Integer, primary_key=True)
     name = Column(String(250), nullable=False)
+    type = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     password = Column(String(250), nullable=False)
 
@@ -33,8 +34,7 @@ class Dealership(Base):
     seller = relationship(User)
 
 # Create an engine that stores data in the local directory's
-# sqlalchemy_example.db file.
-engine = create_engine('sqlite:///C:\\Users\\Faculudade2015-2016\\ES_P1\\project1_sqlalchemy_db.db')
+engine = create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
 
 # Create all tables in the engine. This is equivalent to "Create Table"
 # statements in raw SQL.

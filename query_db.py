@@ -1,7 +1,7 @@
 #from database import User, Base, Car, Dealership
 #from sqlalchemy import create_engine
 
-#engine = create_engine('sqlite:///project1_sqlalchemy_db.db')
+#engine = create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
 #Base.metadata.bind = engine
 
 #from sqlalchemy.orm import sessionmaker
