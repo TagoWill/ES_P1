@@ -1,7 +1,7 @@
 <!doctype html>
-<title>Projecto 1</title>
+<title>Porjecto 1</title>
 <div class=page>
-  <h1>Projecto 1</h1>
+  <h1>Ola</h1>
   <div class=metanav>
   {% if session.logged_in %}
     <a href="{{ url_for('logout') }}">log out</a>
@@ -10,10 +10,5 @@
   <!--{% for message in get_flashed_messages() %}
     <div class=flash>{{ message }}</div>
   {% endfor %}-->
-  {% block body %}
-      <form role="form" action="{{ url_for('login') }}">
-        <button type="submit">login</button>
-      </form>
-      <button action="{{ url_for('register') }}">register</button>
-  {% endblock %}
+  {% block body %}{% endblock %}
 </div>

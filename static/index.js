@@ -27,11 +27,11 @@ var Index = React.createClass({
             dataType: 'json',
             success: this.changepage
 		});
-
     },
 
     changepage: function (result) {
         console.log(result);
+        window.location='/menu?teste='+JSON.stringify(result)
     },
     
     emailChange: function (e) {
