@@ -4,6 +4,8 @@
   <h1>Ola</h1>
   <div class=metanav>
   {% if session.logged_in %}
+      <a href="{{ url_for('account') }}">account</a>
+      <a href="{{ url_for('menu') }}">menu</a>
     <a href="{{ url_for('logout') }}">log out</a>
   {% endif %}
   </div>

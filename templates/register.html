@@ -2,13 +2,18 @@
 {% block body %}
   <h2>Login</h2>
   {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('login') }}" method=post>
+  <form action="{{ url_for('register') }}" method=post>
     <dl>
       <dt>Email:
       <dd><input type=text name=email>
+        <dt>Name:
+      <dd><input type=text name=name>
       <dt>Password:
       <dd><input type=password name=password>
-      <dd><input type=submit value=Login>
+        <dt>Type:
+      <dd><input type=text name=type>
+      <dd><input type=submit value=Register>
     </dl>
   </form>
+    {{ error }}
 {% endblock %}
