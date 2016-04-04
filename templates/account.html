@@ -1,4 +1,8 @@
-{% extends "layout_client.html" %}
+{% if session.user_type == 'client' %}
+    {% extends "layout_client.html" %}
+    {% else %}
+    {% extends "layout_owner.html" %}
+{% endif %}
 {% block body %}
     <h2>Edit Account</h2>
     {% if session.logged_in %}

@@ -5,26 +5,28 @@ from database import User, Base, Car, Dealership
 
 server = Flask(__name__)
 
-
 def connect_db():
     return create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
 
 
 @server.route("/", methods=['GET', 'POST'])
 def login():
+    if session.get('logged_in'):
+        return redirect(url_for('home'))
     error = None
     if request.method == 'POST':
         engine = connect_db()
         Base.metadata.bind = engine
         DBSession = sessionmaker(bind=engine)
-        session2 = DBSession()
-        userexists = session2.query(User).filter_by(email=request.form['email']).first()
-        session2.close()
+        dbsession = DBSession()
+        userexists = dbsession.query(User).filter_by(email=request.form['email']).first()
+        dbsession.close()
         if not userexists:
             error = 'User does not exist!'
         else:
             if userexists.email == request.form['email'] and userexists.password == request.form['password']:
-                session['logged_in'] = request.form['email']
+                session['logged_in'] = True
+                session['user_email'] = request.form['email']
                 session['user_name'] = userexists.name
                 session['user_type'] = userexists.type
                 return redirect(url_for('home'))
@@ -41,18 +43,22 @@ def logout():
 
 @server.route("/register", methods=['GET', 'POST'])
 def register():
+    if session.get('logged_in'):
+        return redirect(url_for('home'))
     error = None
     if request.method == 'POST':
         engine = connect_db()
         Base.metadata.bind = engine
         DBSession = sessionmaker(bind=engine)
-        session2 = DBSession()
-        newuser = User(name=request.form['name'], type=request.form['type'], email=request.form['email'], password=request.form['password'])
-        session2.add(newuser)
-        session2.commit()
-        session2.close()
-        session['logged_in'] = request.form['email']
-        session['name'] = request.form['name']
+        dbsession = DBSession()
+        newuser = User(name=request.form['name'], type=request.form['type'], email=request.form['email'],
+                       password=request.form['password'])
+        dbsession.add(newuser)
+        dbsession.commit()
+        dbsession.close()
+        session['logged_in'] = True
+        session['user_email'] = request.form['email']
+        session['user_name'] = request.form['name']
         session['user_type'] = request.form['type']
         return redirect(url_for('home'))
     return render_template('register.html', error=error)
@@ -60,6 +66,8 @@ def register():
 
 @server.route("/search", methods=['GET', 'POST'])
 def search():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     if session['user_type'] == 'client':
         return render_template('client_search.html')
     else:
@@ -68,58 +76,64 @@ def search():
 
 @server.route("/newdealership", methods=['GET', 'POST'])
 def newdealership():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return render_template('owner_home.html')
 
 
 @server.route("/mycars", methods=['GET', 'POST'])
 def mycars():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return render_template('owner_home.html')
 
 
 @server.route("/mydealerships", methods=['GET', 'POST'])
 def mydealerships():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return render_template('owner_home.html')
 
 
 @server.route("/account", methods=['GET', 'POST'])
 def account():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     return render_template('account.html')
+
 
 @server.route("/editaccount", methods=['GET', 'POST'])
 def editaccount():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     print("edit account")
-    email = str(session['logged_in'])
+    email = str(session['user_email'])
     print(email)
-    if request.method == 'POST':
-        engine = connect_db()
-        Base.metadata.bind = engine
-        DBSession = sessionmaker(bind=engine)
-        session2 = DBSession()
-        usermodified = session2.query(User).filter_by(email=email).first()
-        usermodified.email = request.json['email']
-        usermodified.name = request.json['name']
-        print(request.json)
-        usermodified.password = request.json['password']
-        session2.commit()
-
-
-        data= {'name': usermodified.name, 'email': usermodified.email, 'type': usermodified.type}
-        session2.close()
-        return jsonify(data)
-
     engine = connect_db()
     Base.metadata.bind = engine
-
     DBSession = sessionmaker(bind=engine)
-    session2 = DBSession()
-    userexists = session2.query(User).filter_by(email=email).first()
-    session2.close()
-    data = {'name': userexists.name, 'email': userexists.email, 'type': userexists.type}
+    dbsession = DBSession()
+    useraccount = dbsession.query(User).filter_by(email=email).first()
+    if request.method == 'POST':
+        useraccount.email = request.json['email']
+        useraccount.name = request.json['name']
+        print(request.json)
+        useraccount.password = request.json['password']
+        dbsession.commit()
+
+        data = {'name': useraccount.name, 'email': useraccount.email}
+        dbsession.close()
+        return jsonify(data)
+
+    dbsession.close()
+    data = {'name': useraccount.name, 'email': useraccount.email}
     return jsonify(data)
 
 
 @server.route("/home", methods=['GET'])
 def home():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
     if session['user_type'] == 'client':
         return render_template('client_home.html')
     else:
