@@ -1,10 +1,14 @@
-from sqlalchemy import Column, ForeignKey, Integer, Float, String
+from sqlalchemy import Column, ForeignKey, Integer, Float, String, Table
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy import create_engine
  
 Base = declarative_base()
 
+association_table = Table('association', Base.metadata,
+    Column('dealership_id', Integer, ForeignKey('dealership.dealershipid'), nullable=True),
+    Column('car_id', Integer, ForeignKey('car.carid'), nullable=True)
+)
 
 class User(Base):
     __tablename__ = 'user'
@@ -25,7 +29,10 @@ class Dealership(Base):
     seller_id = Column(Integer, ForeignKey('user.userid'))
     seller = relationship(User)
     #cars_id = Column(Integer, ForeignKey('car.carid'), nullable=True)
-    #cars = relationship("Car", backref="Dealership")
+    mycars = relationship(
+        "Car",
+        secondary=association_table,
+        back_populates="mydealership")
 
 
 class Car(Base):
@@ -38,7 +45,10 @@ class Car(Base):
     owner_id = Column(Integer, ForeignKey('user.userid'))
     owner = relationship(User)
     #dealership_id = Column(Integer, ForeignKey('dealership.dealershipid'), nullable=True)
-    #mydealership = relationship(Dealership)
+    mydealership = relationship(
+        "Dealership",
+        secondary=association_table,
+        back_populates="mycars")
 
 # Create an engine that stores data in the local directory's
 engine = create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')

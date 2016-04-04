@@ -38,4 +38,10 @@ new_deal = Dealership(contact=999999999, district='Coimbra', location_lat=40.1, 
 session.add(new_deal)
 session.commit()
 
+new_car2 = Car(brand='teste', model='320i', fuel='gasoline', price=20000, owner=new_user)
+new_car2.mydealership.append(new_deal)
+session.add(new_car2)
+session.commit()
+
+session.add_all([new_car, new_deal])
 session.close()
