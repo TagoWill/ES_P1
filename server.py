@@ -109,14 +109,7 @@ def account():
     return render_template('account.html')
 
 
-@server.route("/list_clients", methods=['GET', 'POST'])
-def listclients():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template('list_clients.html')
-
-
-@server.route("/search_clients", methods=['GET'])
+@server.route("/search_clients", methods=['GET','POST'])
 def searchclients():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -125,12 +118,16 @@ def searchclients():
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
     dbsession = DBSession()
-    userlist = dbsession.query(User).all()
+
+    if request.method == 'POST':
+        userlist = dbsession.query(User).filter_by(name=request.json['so_search']).all()
+    else:
+        userlist = dbsession.query(User).filter_by(type='client').all()
+
     dbsession.close()
     data = []
     for item in userlist:
-        if item.type == 'client':
-            data.append({'name': item.name, 'email': item.email})
+        data.append({'name': item.name, 'email': item.email})
     print(data)
     return jsonify(data=data)
 

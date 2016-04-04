@@ -24,8 +24,8 @@ class Dealership(Base):
     location_long = Column(Float, nullable=False)
     seller_id = Column(Integer, ForeignKey('user.userid'))
     seller = relationship(User)
-    cars_id = Column(Integer, ForeignKey('car.carid'), nullable=True)
-    cars = relationship("Car", backref="Dealership")
+    #cars_id = Column(Integer, ForeignKey('car.carid'), nullable=True)
+    #cars = relationship("Car", backref="Dealership")
 
 
 class Car(Base):
@@ -37,8 +37,8 @@ class Car(Base):
     price = Column(Integer, nullable=False)
     owner_id = Column(Integer, ForeignKey('user.userid'))
     owner = relationship(User)
-    dealership_id = Column(Integer, ForeignKey('dealership.dealershipid'), nullable=True)
-    mydealership = relationship(Dealership)
+    #dealership_id = Column(Integer, ForeignKey('dealership.dealershipid'), nullable=True)
+    #mydealership = relationship(Dealership)
 
 # Create an engine that stores data in the local directory's
 engine = create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
