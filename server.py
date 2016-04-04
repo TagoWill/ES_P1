@@ -10,32 +10,26 @@ def connect_db():
     return create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
 
 
-@server.route("/")
-def index():
-    return render_template('index.html')
-
-
-@server.route("/login", methods=['GET', 'POST'])
+@server.route("/", methods=['GET', 'POST'])
 def login():
     error = None
     if request.method == 'POST':
-
         engine = connect_db()
         Base.metadata.bind = engine
-
         DBSession = sessionmaker(bind=engine)
         session2 = DBSession()
         userexists = session2.query(User).filter_by(email=request.form['email']).first()
         session2.close()
         if not userexists:
-            error = 'algo nao esta bem'
+            error = 'User does not exist!'
         else:
             if userexists.email == request.form['email'] and userexists.password == request.form['password']:
                 session['logged_in'] = request.form['email']
-                return redirect(url_for('menu'))
+                session['user_name'] = userexists.name
+                session['user_type'] = userexists.type
+                return redirect(url_for('home'))
             else:
-                error = 'login nao correcto'
-
+                error = 'Email or password do not match. Try Again!'
     return render_template('login.html', error=error)
 
 
@@ -51,26 +45,49 @@ def register():
     if request.method == 'POST':
         engine = connect_db()
         Base.metadata.bind = engine
-
         DBSession = sessionmaker(bind=engine)
         session2 = DBSession()
-        novo = User(name=request.form['name'], type=request.form['type'], email=request.form['email'], password=request.form['password'])
-        session2.add(novo)
+        newuser = User(name=request.form['name'], type=request.form['type'], email=request.form['email'], password=request.form['password'])
+        session2.add(newuser)
         session2.commit()
         session2.close()
         session['logged_in'] = request.form['email']
-        return redirect(url_for('menu'))
+        session['name'] = request.form['name']
+        session['user_type'] = request.form['type']
+        return redirect(url_for('home'))
     return render_template('register.html', error=error)
+
+
+@server.route("/search", methods=['GET', 'POST'])
+def search():
+    if session['user_type'] == 'client':
+        return render_template('client_search.html')
+    else:
+        return render_template('owner_search.html')
+
+
+@server.route("/newdealership", methods=['GET', 'POST'])
+def newdealership():
+    return render_template('owner_home.html')
+
+
+@server.route("/mycars", methods=['GET', 'POST'])
+def mycars():
+    return render_template('owner_home.html')
+
+
+@server.route("/mydealerships", methods=['GET', 'POST'])
+def mydealerships():
+    return render_template('owner_home.html')
 
 
 @server.route("/account", methods=['GET', 'POST'])
 def account():
     return render_template('account.html')
 
-
 @server.route("/editaccount", methods=['GET', 'POST'])
 def editaccount():
-    print("edit acount")
+    print("edit account")
     email = str(session['logged_in'])
     print(email)
     if request.method == 'POST':
@@ -100,9 +117,13 @@ def editaccount():
     data = {'name': userexists.name, 'email': userexists.email, 'type': userexists.type}
     return jsonify(data)
 
-@server.route("/menu", methods=['GET'])
-def menu():
-    return render_template('menu.html')
+
+@server.route("/home", methods=['GET'])
+def home():
+    if session['user_type'] == 'client':
+        return render_template('client_home.html')
+    else:
+        return render_template('owner_home.html')
 
 
 if __name__ == '__main__':

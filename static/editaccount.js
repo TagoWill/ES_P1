@@ -67,16 +67,18 @@ var EditAccount = React.createClass({
     render: function() {
         return (
             <form onSubmit={this.handleSubmit}>
-    <dl>
-        <dt></dt>Name:
-      <dd></dd><input type="text" onChange={this.nameChange} value={ this.state.name}/>
-      <dt></dt>Email:
-      <dd></dd><input type="text" onChange={this.emailChange} value={ this.state.email}/>
-      <dt></dt>Password:
-      <dd></dd><input type="password" onChange={this.passChange} value={ this.state.password}/>
-      <dd></dd><input type="submit" value="Save"/>
-    </dl>
-                </form>
+                <br></br>
+                Name: <input type="text" onChange={this.nameChange} value={ this.state.name}/>
+                <br></br>
+                <br></br>
+                Email: <input type="text" onChange={this.emailChange} value={ this.state.email}/>
+                <br></br>
+                <br></br>
+                Password: <input type="password" onChange={this.passChange} value={ this.state.password}/>
+                <br></br>
+                <br></br>
+                <input type="submit" value="Save"/>
+            </form>
       )
     }
 });

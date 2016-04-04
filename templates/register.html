@@ -1,19 +1,27 @@
-{% extends "layout.html" %}
+<!doctype html>
+<style>
+    h1 {text-align:center;}
+    h2 {text-align:center;}
+    form {text-align:center;}
+    p {text-align:center;}
+</style>
+<title>Project 1 - Car Dealership</title>
 {% block body %}
-  <h2>Login</h2>
-  {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
-  <form action="{{ url_for('register') }}" method=post>
-    <dl>
-      <dt>Email:
-      <dd><input type=text name=email>
-        <dt>Name:
-      <dd><input type=text name=name>
-      <dt>Password:
-      <dd><input type=password name=password>
-        <dt>Type:
-      <dd><input type=text name=type>
-      <dd><input type=submit value=Register>
-    </dl>
-  </form>
-    {{ error }}
+    <h1>Car Dealership</h1>
+    <h2>Register</h2>
+    <form action="{{ url_for('register') }}" method=post>
+        <br>
+        Email: <input type=text name=email>
+        <br><br>
+        Name: <input type=text name=name>
+        <br><br>
+        Password: <input type=password name=password>
+        <br><br>
+        Type:
+        <input type=radio name=type value="client">Client
+        <input type=radio name=type value="owner">Owner
+        <br><br>
+        <input type=submit value=Submit>
+    </form>
+    {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
 {% endblock %}
