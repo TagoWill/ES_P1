@@ -102,6 +102,32 @@ def account():
     return render_template('account.html')
 
 
+@server.route("/list_clients", methods=['GET', 'POST'])
+def listclients():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('list_clients.html')
+
+
+@server.route("/search_clients", methods=['GET'])
+def searchclients():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+    userlist = dbsession.query(User).all()
+    dbsession.close()
+    data = []
+    for item in userlist:
+        if item.type == 'client':
+            data.append({'name': item.name, 'email': item.email})
+    print(data)
+    return jsonify(data=data)
+
+
 @server.route("/editaccount", methods=['GET', 'POST'])
 def editaccount():
     if not session.get('logged_in'):
