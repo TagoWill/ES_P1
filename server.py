@@ -81,6 +81,13 @@ def newdealership():
     return render_template('owner_home.html')
 
 
+@server.route("/dealership", methods=['GET', 'POST'])
+def dealership():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('owner_home.html')
+
+
 @server.route("/mycars", methods=['GET', 'POST'])
 def mycars():
     if not session.get('logged_in'):
