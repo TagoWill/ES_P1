@@ -71,6 +71,8 @@ target/
 .idea/dictionaries
 .idea/vcs.xml
 .idea/jsLibraryMappings.xml
+.idea/misc.xml
+.idea/ES_P1.iml
 
 # Sensitive or high-churn files:
 .idea/dataSources.ids
