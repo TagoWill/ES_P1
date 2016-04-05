@@ -28,6 +28,16 @@ new_user2 = User(name='tiago', type='client', email='tiago@gmail.pt', password='
 session.add(new_user2)
 session.commit()
 
+# Insert a User
+new_user3 = User(name='pedro', type='owner', email='pedro@gmail.pt', password='123')
+session.add(new_user3)
+session.commit()
+
+# Insert a User
+new_user4 = User(name='luis', type='client', email='luis@gmail.pt', password='123')
+session.add(new_user4)
+session.commit()
+
 # Insert a Car
 new_car = Car(brand='BMW', model='320i', fuel='gasoline', price=20000, owner=new_user)
 session.add(new_car)
@@ -38,10 +48,9 @@ new_deal = Dealership(contact=999999999, district='Coimbra', location_lat=40.1, 
 session.add(new_deal)
 session.commit()
 
-new_car2 = Car(brand='teste', model='320i', fuel='gasoline', price=20000, owner=new_user)
+new_car2 = Car(brand='Mercedes', model='SLK200', fuel='gasoline', price=30000, owner=new_user)
 new_car2.mydealership.append(new_deal)
 session.add(new_car2)
 session.commit()
 
-session.add_all([new_car, new_deal])
 session.close()

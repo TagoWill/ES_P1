@@ -28,7 +28,6 @@ class Dealership(Base):
     location_long = Column(Float, nullable=False)
     seller_id = Column(Integer, ForeignKey('user.userid'))
     seller = relationship(User)
-    #cars_id = Column(Integer, ForeignKey('car.carid'), nullable=True)
     mycars = relationship(
         "Car",
         secondary=association_table,
@@ -44,7 +43,6 @@ class Car(Base):
     price = Column(Integer, nullable=False)
     owner_id = Column(Integer, ForeignKey('user.userid'))
     owner = relationship(User)
-    #dealership_id = Column(Integer, ForeignKey('dealership.dealershipid'), nullable=True)
     mydealership = relationship(
         "Dealership",
         secondary=association_table,
