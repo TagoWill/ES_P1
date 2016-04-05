@@ -22,6 +22,7 @@ class User(Base):
 class Dealership(Base):
     __tablename__ = 'dealership'
     dealershipid = Column(Integer, primary_key=True)
+    name = Column(String(250), nullable=False)
     contact = Column(Integer, nullable=False)
     district = Column(String(250), nullable=False)
     location_lat = Column(Float, nullable=False)

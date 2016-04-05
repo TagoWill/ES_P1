@@ -5,6 +5,7 @@ from database import User, Base, Car, Dealership
 
 server = Flask(__name__)
 
+
 def connect_db():
     return create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
 
@@ -29,6 +30,7 @@ def login():
                 session['user_email'] = request.form['email']
                 session['user_name'] = userexists.name
                 session['user_type'] = userexists.type
+                session['user_id'] = userexists.userid
                 return redirect(url_for('home'))
             else:
                 error = 'Email or password do not match. Try Again!'
@@ -64,6 +66,16 @@ def register():
     return render_template('register.html', error=error)
 
 
+@server.route("/home", methods=['GET'])
+def home():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    if session['user_type'] == 'client':
+        return render_template('client_home.html')
+    else:
+        return render_template('owner_home.html')
+
+
 @server.route("/search", methods=['GET', 'POST'])
 def search():
     if not session.get('logged_in'):
@@ -74,43 +86,8 @@ def search():
         return render_template('owner_search.html')
 
 
-@server.route("/newdealership", methods=['GET', 'POST'])
-def newdealership():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template('owner_home.html')
-
-
-@server.route("/dealership", methods=['GET', 'POST'])
-def dealership():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template('owner_home.html')
-
-
-@server.route("/mycars", methods=['GET', 'POST'])
-def mycars():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template('owner_home.html')
-
-
-@server.route("/mydealerships", methods=['GET', 'POST'])
-def mydealerships():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template('owner_home.html')
-
-
-@server.route("/account", methods=['GET', 'POST'])
-def account():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    return render_template('account.html')
-
-
-@server.route("/search_clients", methods=['GET','POST'])
-def searchclients():
+@server.route("/listclients", methods=['GET', 'POST'])
+def listclients():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
 
@@ -130,6 +107,132 @@ def searchclients():
         data.append({'name': item.name, 'email': item.email})
     print(data)
     return jsonify(data=data)
+
+
+@server.route("/mycars", methods=['GET', 'POST'])
+def mycars():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('mycars.html')
+
+
+@server.route("/listmycars", methods=['GET', 'POST'])
+def listmycars():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+
+    carslist = dbsession.query(Car).filter_by(owner_id=session['user_id']).all()
+
+    dbsession.close()
+    data = []
+    for item in carslist:
+        data.append({'id': item.carid, 'brand': item.brand,
+                     'model': item.model, 'fuel': item.fuel, 'price': item.price})
+    print(data)
+    return jsonify(data=data)
+
+
+@server.route("/addcar", methods=['GET', 'POST'])
+def addcar():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('addcar.html')
+
+
+@server.route("/add_car", methods=['GET', 'POST'])
+def add_car():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+
+    if request.method == 'POST':
+        new_car = Car(brand=request.json['brand'], model=request.json['model'],
+                      fuel=request.json['fuel'], price=request.json['price'], owner_id=session['user_id'])
+        dbsession.add(new_car)
+        dbsession.commit()
+        data = {'brand': new_car.brand, 'model': new_car.model, 'fuel': new_car.fuel, 'price': new_car.price}
+        dbsession.close()
+        return jsonify(data)
+    return render_template('addcar.html')
+
+
+@server.route("/mydealerships", methods=['GET', 'POST'])
+def mydealerships():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('mydealerships.html')
+
+
+@server.route("/listmydealerships", methods=['GET', 'POST'])
+def listmydealerships():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+
+    dealslist = dbsession.query(Dealership).filter_by(seller_id=session['user_id']).all()
+
+    dbsession.close()
+    data = []
+    for item in dealslist:
+        data.append({'id': item.dealershipid, 'name': item.name, 'contact': item.contact, 'district': item.district})
+    print(data)
+    return jsonify(data=data)
+
+
+@server.route("/newdealership", methods=['GET', 'POST'])
+def newdealership():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('newdealership.html')
+
+
+@server.route("/new_dealership", methods=['GET', 'POST'])
+def new_dealership():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+
+    if request.method == 'POST':
+        new_deal = Dealership(name=request.json['name'], contact=request.json['contact'],
+                              district=request.json['district'], location_lat=40.1,
+                              location_long=-8.4, seller_id=session['user_id'])
+        dbsession.add(new_deal)
+        dbsession.commit()
+        data = {'name': new_deal.name, 'contact': new_deal.contact, 'district': new_deal.district}
+        dbsession.close()
+        return jsonify(data)
+    return render_template('newdealership.html')
+
+
+@server.route("/dealership", methods=['GET', 'POST'])
+def dealership():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('owner_home.html')
+
+
+@server.route("/account", methods=['GET', 'POST'])
+def account():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    return render_template('account.html')
 
 
 @server.route("/editaccount", methods=['GET', 'POST'])
@@ -158,16 +261,6 @@ def editaccount():
     dbsession.close()
     data = {'name': useraccount.name, 'email': useraccount.email}
     return jsonify(data)
-
-
-@server.route("/home", methods=['GET'])
-def home():
-    if not session.get('logged_in'):
-        return redirect(url_for('login'))
-    if session['user_type'] == 'client':
-        return render_template('client_home.html')
-    else:
-        return render_template('owner_home.html')
 
 
 if __name__ == '__main__':

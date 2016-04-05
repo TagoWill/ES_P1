@@ -11,7 +11,7 @@ var ListClients = React.createClass({
     componentDidMount: function() {
         $.ajax({
             type: "GET",
-            url: '/search_clients',
+            url: '/listclients',
             data: '',
             //error: this.handleSubmitFailure,
             success: this.changepage
@@ -35,7 +35,7 @@ var ListClients = React.createClass({
 
         $.ajax({
             type: "POST",
-            url: '/search_clients',
+            url: '/listclients',
             data: JSON.stringify(data),
             contentType: 'application/json;charset=UTF-8',
             dataType: 'json',

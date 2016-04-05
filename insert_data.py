@@ -39,16 +39,17 @@ session.add(new_user4)
 session.commit()
 
 # Insert a Car
-new_car = Car(brand='BMW', model='320i', fuel='gasoline', price=20000, owner=new_user)
+new_car = Car(brand='BMW', model='320i', fuel='gasoline', price=20000, owner_id=new_user.userid)
 session.add(new_car)
 session.commit()
 
 # Insert a Deal
-new_deal = Dealership(contact=999999999, district='Coimbra', location_lat=40.1, location_long=-8.4, seller=new_user)
+new_deal = Dealership(name='StandDaniel', contact=999999999, district='Coimbra', location_lat=40.1,
+                      location_long=-8.4, seller_id=new_user.userid)
 session.add(new_deal)
 session.commit()
 
-new_car2 = Car(brand='Mercedes', model='SLK200', fuel='gasoline', price=30000, owner=new_user)
+new_car2 = Car(brand='Mercedes', model='SLK200', fuel='gasoline', price=30000, owner_id=new_user.userid)
 new_car2.mydealership.append(new_deal)
 session.add(new_car2)
 session.commit()
