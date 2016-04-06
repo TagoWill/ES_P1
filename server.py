@@ -137,6 +137,26 @@ def listmycars():
     return jsonify(data=data)
 
 
+@server.route("/listsearchedcars", methods=['GET', 'POST'])
+def listsearchedcars():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+
+    carslist = dbsession.query(Car).all()
+
+    dbsession.close()
+    data = []
+    for item in carslist:
+        data.append({'id': item.carid, 'brand': item.brand,
+                     'model': item.model, 'fuel': item.fuel, 'price': item.price})
+    print(data)
+    return jsonify(data=data)
+
 @server.route("/addcar", methods=['GET', 'POST'])
 def addcar():
     if not session.get('logged_in'):
