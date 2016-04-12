@@ -3,7 +3,10 @@ var MyCars = React.createClass({
     getInitialState: function() {
     return{
         listofcars: [],
-        dl_search: ''
+        listofdealeships: [],
+        dl_search: '',
+        selectedcar: '1',
+        selecteddealership: '1',
     };
   },
 
@@ -16,19 +19,50 @@ var MyCars = React.createClass({
             success: this.changepage
 		});
 
+        $.ajax({
+            type: "GET",
+            url: '/listmydealerships',
+            data: '',
+            //error: this.handleSubmitFailure,
+            success: this.changeDealership
+
+                /*for (var i = 0; i < resulte.data.length; i++) {
+                    var option = resulte.data[i];
+                    console.log(option);
+                    this.state.listofdealeships.push(
+                        <option key={i} value={option.id}>{option.name}</option>
+                    );
+                }*/
+
+		});
   },
+
+    changeDealership: function (result) {
+        /*console.log(result.data);*/
+        this.setState({
+            listofdealeships: result.data
+        });
+        /*console.log(this.state.listofdealeships);*/
+    },
 
     changepage: function (result) {
         this.setState({
                 listofcars: result.data
         });
     },
+    
+    changeSelectedDealership: function (e) {
+        this.setState({
+            selecteddealership: e.target.value
+        });
+    },
 
-    handleSubmit: function (e){
+    associateDealership: function (e){
         e.preventDefault()
-        console.log('cheguei aqui')
+        console.log('dealership: '+this.state.selecteddealership);
+        console.log('car: '+this.state.selectedcar);
 
-        var data ={
+        /*var data ={
             dl_search: this.state.dl_search
         }
 
@@ -40,19 +74,36 @@ var MyCars = React.createClass({
             dataType: 'json',
             //error: this.handleSubmitFailure,
             success: this.changepage
-		});
+		});*/
+    },
+
+    createlistdealerships: function (item, id) {
+        console.log(id);
+        return (<option value={item.id}>{item.name}</option>)
+    },
+
+    createlistcars: function (item) {
+        var linha = [<td>
+                    <a href={'detailcar?id='+item.id}>{item.brand}</a></td>,
+                            <td>{item.model}</td>,
+                <td>{item.fuel}</td>,
+                <td>{item.price}€</td>,
+                <td>FALTA</td>,
+                <td><form onSubmit={this.associateDealership}>
+                    <select name="play" onChange={this.changeSelectedDealership} value={this.state.selecteddealership}>
+                        {this.state.listofdealeships.map(this.createlistdealerships)}
+                    </select>
+                    <button type="submit">Add to Playlist</button>
+
+                    <input type="hidden" name="teste" value={item.id}/>
+                </form></td>,
+            <td>FALTA</td>,
+            <td><a href={'delete_car?id='+item.id}>click</a></td>]
+            return (<tr>{linha}</tr>)
     },
 
     render: function() {
-        var createItem = function(item) {
-            var linha = [<td>
-                    <a href={'cardetail?id='+item.id}>{item.brand}</a></td>,
-                            <td>{item.model}</td>,<td>{item.fuel}</td>,<td>{item.price}€</td>]
-            return (<tr>{linha}</tr>)
-        };
-
         return (
-            <form onSubmit={this.handleSubmit}>
             <table>
                 <thead>
                 <tr>
@@ -60,13 +111,16 @@ var MyCars = React.createClass({
                     <th>Model</th>
                     <th>Fuel</th>
                     <th>Price</th>
+                    <th>Image</th>
+                    <th>Association</th>
+                    <th>Edit</th>
+                    <th>Delete</th>
                 </tr>
                 </thead>
                 <tbody>
-                    {this.state.listofcars.map(createItem)}
+                    {this.state.listofcars.map(this.createlistcars)}
                 </tbody>
             </table>
-            </form>
       )
     }
 });

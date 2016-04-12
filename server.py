@@ -165,6 +165,23 @@ def add_car():
     return render_template('addcar.html')
 
 
+@server.route("/delete_car", methods=['GET', 'POST'])
+def delete_car():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+
+    car = dbsession.query(Car).filter_by(carid=request.args.get('id', '')).first()
+    dbsession.delete(car)
+    dbsession.commit()
+    dbsession.close()
+    return redirect(url_for('mycars'))
+
+
 @server.route("/mydealerships", methods=['GET', 'POST'])
 def mydealerships():
     if not session.get('logged_in'):
