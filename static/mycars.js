@@ -97,7 +97,7 @@ var MyCars = React.createClass({
 
                     <input type="hidden" name="teste" value={item.id}/>
                 </form></td>,
-            <td>FALTA</td>,
+            <td><a href={'edit_car?id='+item.id}>click</a></td>,
             <td><a href={'delete_car?id='+item.id}>click</a></td>]
             return (<tr>{linha}</tr>)
     },

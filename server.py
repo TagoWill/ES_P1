@@ -211,6 +211,12 @@ def add_car():
     return render_template('addcar.html')
 
 
+@server.route("/edit_car", methods=['GET', 'POST'])
+def edit_car():
+
+    return render_template('editcar.html', carid=edit_car)
+
+
 @server.route("/delete_car", methods=['GET', 'POST'])
 def delete_car():
     if not session.get('logged_in'):
