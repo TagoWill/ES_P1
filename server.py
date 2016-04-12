@@ -177,8 +177,15 @@ def listsearchedcars():
     dbsession.close()
     data = []
     for item in carslist:
+        asdf = None
+        fdsa = None
+        car_item = dbsession.query(Dealership).filter(Dealership.mycars.any(Car.carid == item.carid)).all()
+        for info_item in car_item:
+            asdf = info_item.name
+            fdsa = info_item.district
         data.append({'id': item.carid, 'brand': item.brand,
-                     'model': item.model, 'fuel': item.fuel, 'price': item.price})
+                 'model': item.model, 'fuel': item.fuel,
+                 'price': item.price, 'dealership': asdf, 'district': fdsa})
     print(data)
     return jsonify(data=data)
 

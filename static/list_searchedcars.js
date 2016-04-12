@@ -3,7 +3,6 @@ var ListSearchedCars = React.createClass({
     getInitialState: function() {
     return{
         listofcars: [],
-        car_search_keyword: '',
         car_search_brand: 'All',
         car_search_model: 'All',
         car_search_fuel: 'All',
@@ -34,7 +33,6 @@ var ListSearchedCars = React.createClass({
         //console.log('cheguei aqui')
 
         var data ={
-            car_search: this.state.car_search,
             car_search_brand: this.state.car_search_brand,
             car_search_model: this.state.car_search_model,
             car_search_fuel: this.state.car_search_fuel,
@@ -51,10 +49,6 @@ var ListSearchedCars = React.createClass({
             //error: this.handleSubmitFailure,
             success: this.changepage
 		});
-    },
-
-    car_searchChange: function (e) {
-        this.setState({car_search_keyword: e.target.value})
     },
 
     car_searchChange_brand: function (e) {
@@ -80,8 +74,8 @@ var ListSearchedCars = React.createClass({
     render: function() {
         var createItem = function(item) {
             var linha = [<td>
-                    <a href={'cardetail?id='+item.id}>{item.brand}</a></td>,
-                            <td>{item.model}</td>,<td>{item.fuel}</td>,<td>{item.price}€</td>]
+                    <a href={'cardetail?id='+item.id}>{item.brand}</a></td>,,<td>{item.model}</td>,
+                            <td>{item.fuel}</td>,<td>{item.price}€</td>,<td>{item.dealership}</td>,<td>{item.district}</td>]
             return (<tr>{linha}</tr>)
         };
 
@@ -90,7 +84,6 @@ var ListSearchedCars = React.createClass({
                 <form onSubmit={this.handleSubmit}>
                     <table>
                         <tr>
-                            <td>Search Keywords</td>
                             <td>Brand</td>
                             <td>Model</td>
                             <td>Fuel</td>
@@ -98,7 +91,6 @@ var ListSearchedCars = React.createClass({
                             <td>Kilometer Range</td>
                         </tr>
                         <tr>
-                            <td><input type="text" onChange={this.car_searchChange} value={this.state.car_search_keyword}/></td>
                             <td><select onChange={this.car_searchChange_brand} value={this.state.car_search_brand}>
                                 <option defaultValue="selected">All</option>
                                 <option>Audi</option>
@@ -133,7 +125,7 @@ var ListSearchedCars = React.createClass({
                                 <option>60KM - 70KM</option>
                                 <option>70KM - 80KM</option>
                             </select></td>
-                            <td><input type="submit" value="Submit"/></td>
+                            <td><input type="submit" value="Search"/></td>
                         </tr>
                     </table>
                 </form>
@@ -145,6 +137,8 @@ var ListSearchedCars = React.createClass({
                             <th>Model</th>
                             <th>Fuel</th>
                             <th>Price</th>
+                            <th>Dealership</th>
+                            <th>District</th>
                         </tr>
                         </thead>
                         <tbody>
