@@ -147,7 +147,32 @@ def listsearchedcars():
     DBSession = sessionmaker(bind=engine)
     dbsession = DBSession()
 
-    carslist = dbsession.query(Car).all()
+    if request.json['car_search_brand'] == 'All' and request.json['car_search_model'] == 'All' and \
+                    request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] == 'All Prices' and \
+                    request.json['car_search_kmrange'] == 'All':
+        carslist = dbsession.query(Car).all()
+    elif request.json['car_search_brand'] != 'All' and request.json['car_search_model'] == 'All' and \
+                    request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] == 'All Prices' and \
+                    request.json['car_search_kmrange'] == 'All':
+        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']).all()
+    elif request.json['car_search_brand'] == 'All' and request.json['car_search_model'] != 'All' and \
+                    request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] == 'All Prices' and \
+                    request.json['car_search_kmrange'] == 'All':
+        carslist = dbsession.query(Car).filter_by(model=request.json['car_search_model']).all()
+    elif request.json['car_search_brand'] == 'All' and request.json['car_search_model'] == 'All' and \
+                    request.json['car_search_fuel'] != 'All' and request.json['car_search_price'] == 'All Prices' and \
+                    request.json['car_search_kmrange'] == 'All':
+        carslist = dbsession.query(Car).filter_by(fuel=request.json['car_search_fuel']).all()
+    elif request.json['car_search_brand'] == 'All' and request.json['car_search_model'] == 'All' and \
+             request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] != 'All Prices' and \
+             request.json['car_search_kmrange'] == 'All':
+        carslist = dbsession.query(Car).filter_by(price=request.json['car_search_price']).all()
+    elif request.json['car_search_brand'] == 'All' and request.json['car_search_model'] == 'All' and \
+             request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] == 'All Prices' and \
+             request.json['car_search_kmrange'] != 'All':
+        carslist = dbsession.query(Car).filter(Car.mydealership.any(Dealership.district == request.json['car_search_kmrange'])).all()
+
+
 
     dbsession.close()
     data = []
@@ -156,6 +181,7 @@ def listsearchedcars():
                      'model': item.model, 'fuel': item.fuel, 'price': item.price})
     print(data)
     return jsonify(data=data)
+
 
 @server.route("/addcar", methods=['GET', 'POST'])
 def addcar():
