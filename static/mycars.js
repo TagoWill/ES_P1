@@ -60,7 +60,7 @@ var MyCars = React.createClass({
     associateDealership: function (e){
         e.preventDefault()
         console.log('dealership: '+this.state.selecteddealership);
-        console.log('car: '+this.state.selectedcar);
+        console.log('car: '+ e.target.value);
 
         /*var data ={
             dl_search: this.state.dl_search
@@ -97,7 +97,7 @@ var MyCars = React.createClass({
 
                     <input type="hidden" name="teste" value={item.id}/>
                 </form></td>,
-            <td><a href={'edit_car?id='+item.id}>click</a></td>,
+            <td><a href={'editcar?id='+item.id}>click</a></td>,
             <td><a href={'delete_car?id='+item.id}>click</a></td>]
             return (<tr>{linha}</tr>)
     },

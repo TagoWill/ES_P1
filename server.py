@@ -211,10 +211,41 @@ def add_car():
     return render_template('addcar.html')
 
 
-@server.route("/edit_car", methods=['GET', 'POST'])
-def edit_car():
+@server.route("/editcar", methods=['GET', 'POST'])
+def editcar():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
 
-    return render_template('editcar.html', carid=edit_car)
+    session['car'] = request.args.get('id', '')
+    return render_template('editcar.html')
+
+
+@server.route("/edit_car", methods=['GET', 'POST'])
+def edi_tcar():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+    car = dbsession.query(Car).filter_by(carid=session['car']).first()
+
+    if request.method == 'POST':
+        car.brand = request.json['brand']
+        car.model = request.json['model']
+        car.fuel = request.json['fuel']
+        car.price = request.json['price']
+        car.owner_id = session['user_id']
+        dbsession.commit()
+
+        data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price}
+        dbsession.close()
+        return jsonify(data)
+
+    dbsession.close()
+    data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price}
+    return jsonify(data)
 
 
 @server.route("/delete_car", methods=['GET', 'POST'])
