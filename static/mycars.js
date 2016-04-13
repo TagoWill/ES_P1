@@ -50,37 +50,6 @@ var MyCars = React.createClass({
                 listofcars: result.data
         });
     },
-    
-    changeSelectedDealership: function (e) {
-        this.setState({
-            selecteddealership: e.target.value
-        });
-    },
-
-    associateDealership: function (e){
-        e.preventDefault()
-        console.log('dealership: '+this.state.selecteddealership);
-        console.log('car: '+ e.target.value);
-
-        /*var data ={
-            dl_search: this.state.dl_search
-        }
-
-        $.ajax({
-            type: "POST",
-            url: '/listmycars',
-            data: JSON.stringify(data),
-            contentType: 'application/json;charset=UTF-8',
-            dataType: 'json',
-            //error: this.handleSubmitFailure,
-            success: this.changepage
-		});*/
-    },
-
-    createlistdealerships: function (item, id) {
-        console.log(id);
-        return (<option value={item.id}>{item.name}</option>)
-    },
 
     createlistcars: function (item) {
         var linha = [
@@ -90,12 +59,6 @@ var MyCars = React.createClass({
                             <td>{item.model}</td>,
                 <td>{item.fuel}</td>,
                 <td>{item.price}€</td>,
-                <td><form onSubmit={this.associateDealership}>
-                    <select name="play" onChange={this.changeSelectedDealership} value={this.state.selecteddealership}>
-                        {this.state.listofdealeships.map(this.createlistdealerships)}
-                    </select>
-                    <button type="submit">Associate</button>
-                </form></td>,
             <td><a href={'editcar?id='+item.id}>click</a></td>,
             <td><a href={'delete_car?id='+item.id}>click</a></td>]
             return (<tr>{linha}</tr>)
@@ -111,7 +74,6 @@ var MyCars = React.createClass({
                     <th>Model</th>
                     <th>Fuel</th>
                     <th>Price</th>
-                    <th>Association</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>
