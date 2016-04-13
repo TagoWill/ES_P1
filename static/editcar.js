@@ -114,3 +114,82 @@ var AddCar = React.createClass({
 });
 
 ReactDOM.render(<AddCar />, editcar);
+
+var Association = React.createClass({
+    
+    getInitialState: function() {
+    return{
+        listofdealeships: [],
+        selecteddealership: '0',
+    };
+  },
+
+    componentDidMount: function() {
+
+        $.ajax({
+            type: "GET",
+            url: '/listdealershipsbydonthavecar',
+            data: '',
+            //error: this.handleSubmitFailure,
+            success: this.changeDealership
+
+		});
+  },
+
+    associateDealership: function (e){
+        e.preventDefault()
+        console.log('dealership: '+this.state.selecteddealership);
+
+
+        var data = {
+            selecteddealership: this.state.selecteddealership,
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/associatecaranddealership',
+            data: JSON.stringify(data),
+            contentType: 'application/json;charset=UTF-8',
+            dataType: 'json',
+            //error: this.handleSubmitFailure,
+            success: this.changeDealership
+		});
+    },
+
+    changeDealership: function (result) {
+        console.log(result.data);
+        this.setState({
+            listofdealeships: result.data
+        });
+        /*console.log(this.state.listofdealeships);*/
+    },
+
+    changeSelectedDealership: function (e) {
+        this.setState({
+            selecteddealership: e.target.value
+        });
+    },
+
+    createlistdealerships: function (item, id) {
+        console.log(item.id);
+        return (<option value={item.id}>{item.name}</option>)
+    },
+
+    
+    render: function() {
+        return (
+            <div id="assocation">
+            <p>Association</p>
+                <form onSubmit={this.associateDealership}>
+                    <select name="play" onChange={this.changeSelectedDealership} value={this.state.selecteddealership}>
+                        <option value="50"> </option>
+                        {this.state.listofdealeships.map(this.createlistdealerships)}
+                    </select>
+                    <button type="submit">Associate</button>
+                </form>
+            </div>
+      )
+    }
+});
+
+ReactDOM.render(<Association />, association);
