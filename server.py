@@ -410,6 +410,13 @@ def deleteaccount():
     DBSession = sessionmaker(bind=engine)
     dbsession = DBSession()
     useraccount = dbsession.query(User).filter_by(email=email).first()
+    if useraccount.type == "owner":
+        usercars = dbsession.query(Car).filter_by(owner_id=useraccount.userid).all()
+        userdealerships = dbsession.query(Dealership).filter_by(seller_id=useraccount.userid).all()
+        for each_car in usercars:
+            dbsession.delete(each_car)
+        for each_dealership in userdealerships:
+            dbsession.delete(each_dealership)
     dbsession.delete(useraccount)
     dbsession.commit()
     dbsession.close()
