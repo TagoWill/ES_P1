@@ -23,9 +23,15 @@ var ListSearchedCars = React.createClass({
   },*/
 
     changepage: function (result) {
+        //console.log("result: "+result.data);
         this.setState({
-                listofcars: result.data
+            listofcars: result.data
         });
+        if (result.data!='') {
+            ReactDOM.render(<AccountFOUNDMsg/>, accountactionmsg);
+        } else {
+            ReactDOM.render(<AccountNOTFOUNDMsg/>, accountactionmsg);
+        }
     },
 
     handleSubmit: function (e){
@@ -150,7 +156,28 @@ var ListSearchedCars = React.createClass({
                     </table>
                 </form>
             </div>
-      )
+        )
+    }
+});
+
+var AccountFOUNDMsg = React.createClass({
+    render: function() {
+        console.log(ListSearchedCars.listofcars);
+        return (
+            <div id="accountactionmsg_div">
+                Cars Found!
+            </div>
+        )
+    }
+});
+
+var AccountNOTFOUNDMsg = React.createClass({
+    render: function() {
+        return (
+            <div id="accountactionmsg_div">
+                Cars Not Found!
+            </div>
+        )
     }
 });
 
