@@ -315,9 +315,9 @@ def account():
 def editaccount():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    print("edit account")
+    #print("edit account")
     email = str(session['user_email'])
-    print(email)
+    #print(email)
     engine = connect_db()
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
@@ -326,6 +326,7 @@ def editaccount():
     if request.method == 'POST':
         useraccount.email = request.json['email']
         useraccount.name = request.json['name']
+        session['user_name'] = useraccount.name
         print(request.json)
         useraccount.password = request.json['password']
         dbsession.commit()
@@ -337,6 +338,25 @@ def editaccount():
     dbsession.close()
     data = {'name': useraccount.name, 'email': useraccount.email}
     return jsonify(data)
+
+
+@server.route("/deleteaccount", methods=['POST'])
+def deleteaccount():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    #print("delete account")
+    email = str(session['user_email'])
+    #print(email)
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+    useraccount = dbsession.query(User).filter_by(email=email).first()
+    dbsession.delete(useraccount)
+    dbsession.commit()
+    dbsession.close()
+    session.pop('logged_in', None)
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':

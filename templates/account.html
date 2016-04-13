@@ -5,7 +5,7 @@
 {% endif %}
 {% block body %}
     <br>
-    <h2>Edit Account</h2>
+    <h2>My Account</h2>
     {% if session.logged_in %}
         <div id="editaccount"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
@@ -15,6 +15,7 @@
         <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/babel" src="{{ url_for('static', filename='editaccount.js') }}"></script>
+        <div id="accountactionmsg"></div>
         {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
     {% endif %}
 {% endblock %}

@@ -95,8 +95,11 @@ var ListSearchedCars = React.createClass({
                                 <option defaultValue="selected">All</option>
                                 <option>Audi</option>
                                 <option>BMW</option>
+                                <option>Ferrari</option>
+                                <option>Fiat</option>
                                 <option>Mercedes</option>
                                 <option>Opel</option>
+                                <option>Seat</option>
                                 <option>Wolkswagen</option>
                             </select></td>
                             <td><select onChange={this.car_searchChange_model} value={this.state.car_search_model}>
