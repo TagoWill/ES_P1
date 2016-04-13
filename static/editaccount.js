@@ -23,7 +23,7 @@ var EditAccount = React.createClass({
 
     handleSubmit: function (e){
         e.preventDefault()
-        console.log('cheguei aqui')
+        //console.log('handleSubmit')
 
         var data = {
             name: this.state.name,
@@ -31,22 +31,50 @@ var EditAccount = React.createClass({
             password: this.state.password
         }
 
-        console.log(data)
+        //console.log(data)
+
+        if (data.password!=undefined) {
+            $.ajax({
+                type: "POST",
+                url: '/editaccount',
+                data: JSON.stringify(data),
+                contentType: 'application/json;charset=UTF-8',
+                //error: this.handleSubmitFailure,
+                dataType: 'json',
+                success: this.changepage
+		    })
+            ReactDOM.render(<AccountSUCCESSMsg/>, accountactionmsg);
+        }
+        else {
+            //console.log(data);
+            ReactDOM.render(<AccountERRORMsg/>, accountactionmsg);
+        }
+    },
+    
+    handleDeleteSubmit: function (){
+        console.log("handleDeleteSubmit"+this.state.name+this.state.email);
+        var data = {
+            name: this.state.name,
+            email: this.state.email
+        }
+
+        //console.log("data: "+data)
 
         $.ajax({
             type: "POST",
-            url: '/editaccount',
+            url: '/deleteaccount',
             data: JSON.stringify(data),
             contentType: 'application/json;charset=UTF-8',
             //error: this.handleSubmitFailure,
-            dataType: 'json',
-            success: this.changepage
+            dataType: 'json'
+            //success: this.changepage
 		});
+        ReactDOM.render(<AccountDELETEDMsg/>, accountactionmsg);
     },
 
     changepage: function (result) {
-        console.log(result);
-        console.log(result.name);
+        //console.log(result);
+        //console.log(result.name);
         this.setState({name: result.name})
         this.setState({email: result.email})
         this.setState({password: result.password})
@@ -64,22 +92,64 @@ var EditAccount = React.createClass({
         this.setState({name: e.target.value})
     },
 
+    PopUpFunction: function () {
+        if (confirm("Are you sure?") == true) {
+            //console.log("myfunction");
+            this.handleDeleteSubmit()
+        }
+    },
+
     render: function() {
         return (
-            <form onSubmit={this.handleSubmit}>
+            <div id="editaccount_div">
+                <form onSubmit={this.handleSubmit}>
+                    <br></br>
+                    Name: <input type="text" onChange={this.nameChange} value={this.state.name}/>
+                    <br></br>
+                    <br></br>
+                    Email: <input type="text" onChange={this.emailChange} value={this.state.email}/>
+                    <br></br>
+                    <br></br>
+                    Password: <input type="password" onChange={this.passChange} value={this.state.password}/>
+                    <br></br>
+                    <br></br>
+                    <input type="submit" value="Save Modifications"/>
+                </form>
                 <br></br>
-                Name: <input type="text" onChange={this.nameChange} value={ this.state.name}/>
                 <br></br>
-                <br></br>
-                Email: <input type="text" onChange={this.emailChange} value={ this.state.email}/>
-                <br></br>
-                <br></br>
-                Password: <input type="password" onChange={this.passChange} value={ this.state.password}/>
-                <br></br>
-                <br></br>
-                <input type="submit" value="Save"/>
-            </form>
-      )
+                <button onClick={this.PopUpFunction}>Delete Account</button>
+            </div>
+        )
+    }
+});
+
+var AccountERRORMsg = React.createClass({
+    render: function() {
+        return (
+            <div id="accountactionmsg_div">
+                Error: Password must be submited in order to edit!
+            </div>
+        )
+    }
+});
+
+var AccountSUCCESSMsg = React.createClass({
+    render: function() {
+        return (
+            <div id="accountactionmsg_div">
+                Account Successfully Edited!
+            </div>
+        )
+    }
+});
+
+var AccountDELETEDMsg = React.createClass({
+    render: function() {
+        return (
+            <div id="accountactionmsg_div">
+                Account Successfully Deleted!
+            </div>
+        )
     }
 });
 

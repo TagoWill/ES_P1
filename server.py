@@ -177,8 +177,15 @@ def listsearchedcars():
     dbsession.close()
     data = []
     for item in carslist:
+        asdf = None
+        fdsa = None
+        car_item = dbsession.query(Dealership).filter(Dealership.mycars.any(Car.carid == item.carid)).all()
+        for info_item in car_item:
+            asdf = info_item.name
+            fdsa = info_item.district
         data.append({'id': item.carid, 'brand': item.brand,
-                     'model': item.model, 'fuel': item.fuel, 'price': item.price})
+                 'model': item.model, 'fuel': item.fuel,
+                 'price': item.price, 'dealership': asdf, 'district': fdsa})
     print(data)
     return jsonify(data=data)
 
@@ -339,9 +346,9 @@ def account():
 def editaccount():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
-    print("edit account")
+    #print("edit account")
     email = str(session['user_email'])
-    print(email)
+    #print(email)
     engine = connect_db()
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
@@ -350,6 +357,7 @@ def editaccount():
     if request.method == 'POST':
         useraccount.email = request.json['email']
         useraccount.name = request.json['name']
+        session['user_name'] = useraccount.name
         print(request.json)
         useraccount.password = request.json['password']
         dbsession.commit()
@@ -361,6 +369,25 @@ def editaccount():
     dbsession.close()
     data = {'name': useraccount.name, 'email': useraccount.email}
     return jsonify(data)
+
+
+@server.route("/deleteaccount", methods=['POST'])
+def deleteaccount():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    #print("delete account")
+    email = str(session['user_email'])
+    #print(email)
+    engine = connect_db()
+    Base.metadata.bind = engine
+    DBSession = sessionmaker(bind=engine)
+    dbsession = DBSession()
+    useraccount = dbsession.query(User).filter_by(email=email).first()
+    dbsession.delete(useraccount)
+    dbsession.commit()
+    dbsession.close()
+    session.pop('logged_in', None)
+    return redirect(url_for('login'))
 
 
 if __name__ == '__main__':
