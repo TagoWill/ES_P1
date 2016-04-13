@@ -1,7 +1,12 @@
-from flask import Flask, request, render_template, jsonify, abort, redirect, url_for, session
+from flask import Flask, request, render_template, jsonify, abort, redirect, url_for, session, send_from_directory
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from database import User, Base, Car, Dealership
+import os
+
+
+UPLOAD_FOLDER = '\image'
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 server = Flask(__name__)
 
@@ -228,7 +233,7 @@ def editcar():
 
 
 @server.route("/edit_car", methods=['GET', 'POST'])
-def edi_tcar():
+def edit_car():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
 
@@ -270,6 +275,28 @@ def delete_car():
     dbsession.commit()
     dbsession.close()
     return redirect(url_for('mycars'))
+
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
+
+
+@server.route("/image", methods=['GET', 'POST'])
+def image():
+    if request.method == 'POST':
+        file = request.files['file']
+        if file and allowed_file(file.filename):
+            filename = file.filename
+            file.save(os.path.join(os.path.dirname(__file__)+server.config['UPLOAD_FOLDER'], filename))
+            return redirect(url_for('uploaded_file',
+                                    filename=filename))
+    return redirect(url_for('home'))
+
+@server.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(os.path.dirname(__file__)+server.config['UPLOAD_FOLDER'],
+                               filename)
 
 
 @server.route("/mydealerships", methods=['GET', 'POST'])
@@ -392,4 +419,5 @@ def deleteaccount():
 
 if __name__ == '__main__':
     server.secret_key = 'teste'
+    server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     server.run(debug=True)

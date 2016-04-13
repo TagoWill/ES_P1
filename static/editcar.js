@@ -5,7 +5,8 @@ var AddCar = React.createClass({
         brand: '',
         model: '',
         fuel: '',
-        price: ''
+        price: '',
+        data_uri: null,
     };
   },
 
@@ -70,24 +71,44 @@ var AddCar = React.createClass({
         this.setState({brand: e.target.value})
     },
 
+    handleFile: function(e) {
+    var self = this;
+    var reader = new FileReader();
+    var file = e.target.files[0];
+
+    reader.onload = function(upload) {
+      self.setState({
+        data_uri: upload.target.result,
+      });
+    }
+
+    reader.readAsDataURL(file);
+  },
+
+    handleImages: function (e) {
+        e.preventDefault()
+    },
+
     render: function() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <br></br>
-                Brand: <input type="text" onChange={this.brandChange} value={ this.state.brand}/>
-                <br></br>
-                <br></br>
-                Model: <input type="text" onChange={this.modelChange} value={ this.state.model}/>
-                <br></br>
-                <br></br>
-                Fuel: <input type="text" onChange={this.fuelChange} value={ this.state.fuel}/>
-                <br></br>
-                <br></br>
-                Price: <input type="text" onChange={this.priceChange} value={ this.state.price}/>
-                <br></br>
-                <br></br>
-                <input type="submit" value="Save"/>
-            </form>
+            
+                <form onSubmit={this.handleSubmit}>
+                    <br></br>
+                    Brand: <input type="text" onChange={this.brandChange} value={ this.state.brand}/>
+                    <br></br>
+                    <br></br>
+                    Model: <input type="text" onChange={this.modelChange} value={ this.state.model}/>
+                    <br></br>
+                    <br></br>
+                    Fuel: <input type="text" onChange={this.fuelChange} value={ this.state.fuel}/>
+                    <br></br>
+                    <br></br>
+                    Price: <input type="text" onChange={this.priceChange} value={ this.state.price}/>
+                    <br></br>
+                    <br></br>
+                    <input type="submit" value="Save"/>
+                </form>
+
       )
     }
 });
