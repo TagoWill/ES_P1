@@ -5,7 +5,7 @@ from database import User, Base, Car, Dealership
 import os
 
 
-UPLOAD_FOLDER = '\image'
+UPLOAD_FOLDER = '\statc\image'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 server = Flask(__name__)
@@ -288,9 +288,11 @@ def image():
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = file.filename
-            file.save(os.path.join(os.path.dirname(__file__)+server.config['UPLOAD_FOLDER'], filename))
-            return redirect(url_for('uploaded_file',
-                                    filename=filename))
+            filename, file_extension = os.path.splitext(filename)
+            file.save(os.path.join(os.path.dirname(__file__)+server.config['UPLOAD_FOLDER'], session['car'] + file_extension))
+            #return redirect(url_for('uploaded_file',
+            #                       filename=filename))
+            return redirect(url_for('mycars'))
     return redirect(url_for('home'))
 
 @server.route('/uploads/<filename>')

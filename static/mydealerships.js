@@ -47,7 +47,7 @@ var MyDealerships = React.createClass({
         var createItem = function(item) {
             var linha = [<td>
                     <a href={'dealershipdetail?id='+item.id}>{item.name}</a></td>,
-                                    <td>{item.contact}</td>,<td>{item.district}</td>]
+                                    <td>{item.contact}</td>,<td>{item.district}</td>, <td>FALTA</td>]
             return (<tr>{linha}</tr>)
         };
 
@@ -59,6 +59,7 @@ var MyDealerships = React.createClass({
                     <th>Name</th>
                     <th>Contact</th>
                     <th>District</th>
+                    <th>Edit</th>
                 </tr>
                 </thead>
                 <tbody>

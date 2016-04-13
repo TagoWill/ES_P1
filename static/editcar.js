@@ -114,3 +114,13 @@ var AddCar = React.createClass({
 });
 
 ReactDOM.render(<AddCar />, editcar);
+
+var Association = React.createClass({
+    render: function() {
+        return (
+            <p>Association</p>
+      )
+    }
+});
+
+ReactDOM.render(<Association />, association);
