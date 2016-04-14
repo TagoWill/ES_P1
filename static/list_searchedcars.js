@@ -59,6 +59,9 @@ var ListSearchedCars = React.createClass({
 
     car_searchChange_brand: function (e) {
         this.setState({car_search_brand: e.target.value});
+        //IR A BASE DE DADOS BUSCAR MODELOS
+        //MODIFICAR VARIAVEL COM NOVOS MODELOS.
+        //FAZER RENDER
         ReactDOM.render(<ModelSelectBox/>, modelselect);
     },
 
@@ -113,6 +116,8 @@ var ListSearchedCars = React.createClass({
                                 <option defaultValue="selected">All</option>
                                 <option>320i</option>
                                 <option>SLK200</option>
+                                <!-- FAZER ISTO DINAMICO -->
+                                <!-- {this.state.variavel.map(funcao)} -->
                             </select></td>
                             <td><select onChange={this.car_searchChange_fuel} value={this.state.car_search_fuel}>
                                 <option defaultValue="selected">All</option>
