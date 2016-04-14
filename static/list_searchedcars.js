@@ -3,11 +3,12 @@ var ListSearchedCars = React.createClass({
     getInitialState: function() {
     return{
         listofcars: [],
-        car_search_brand: 'All',
+        car_search_brand: '',
         car_search_model: 'All',
         car_search_fuel: 'All',
         car_search_price: 'All Prices',
-        car_search_kmrange: 'All'
+        car_search_kmrange: 'All',
+        list_of_models: []
     };
   },
 
@@ -59,10 +60,27 @@ var ListSearchedCars = React.createClass({
 
     car_searchChange_brand: function (e) {
         this.setState({car_search_brand: e.target.value});
-        //IR A BASE DE DADOS BUSCAR MODELOS
-        //MODIFICAR VARIAVEL COM NOVOS MODELOS.
-        //FAZER RENDER
-        ReactDOM.render(<ModelSelectBox/>, modelselect);
+        //console.log('cheguei aquii' + e.target.value);
+        //ReactDOM.render(<ModelSelectBox/>, modelselect);
+        //this.getmodels;
+        var data = {
+            car_search_brand: e.target.value
+        }
+
+        $.ajax({
+            type: "POST",
+            url: '/getmodels',
+            data: JSON.stringify(data),
+            contentType: 'application/json;charset=UTF-8',
+            dataType: 'json',
+            //error: this.handleSubmitFailure,
+            success: this.handleListOfModels
+		});
+    },
+
+    handleListOfModels:function (result) {
+        //console.log(result.data)
+        this.setState({list_of_models: result.data});
     },
 
     car_searchChange_model: function (e) {
@@ -89,6 +107,10 @@ var ListSearchedCars = React.createClass({
             return (<tr>{linha}</tr>)
         };
 
+        var iteracaoDosModels = function (item) {
+            return <option value={item.modelid}>{item.model}</option>
+        }
+
         return (
             <div id="search_div">
                 <form onSubmit={this.handleSubmit}>
@@ -102,7 +124,7 @@ var ListSearchedCars = React.createClass({
                         </tr>
                         <tr>
                             <td><select onChange={this.car_searchChange_brand} value={this.state.car_search_brand}>
-                                <option defaultValue="selected">All</option>
+                                <option>All</option>
                                 <option>Audi</option>
                                 <option>BMW</option>
                                 <option>Ferrari</option>
@@ -114,10 +136,7 @@ var ListSearchedCars = React.createClass({
                             </select></td>
                             <td><select onChange={this.car_searchChange_model} value={this.state.car_search_model}>
                                 <option defaultValue="selected">All</option>
-                                <option>320i</option>
-                                <option>SLK200</option>
-                                <!-- FAZER ISTO DINAMICO -->
-                                <!-- {this.state.variavel.map(funcao)} -->
+                                {this.state.list_of_models.map(iteracaoDosModels)}
                             </select></td>
                             <td><select onChange={this.car_searchChange_fuel} value={this.state.car_search_fuel}>
                                 <option defaultValue="selected">All</option>

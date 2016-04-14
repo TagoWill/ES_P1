@@ -410,7 +410,7 @@ def associatecaranddealership():
 
 @server.route('/listdealershipsbyhavingcar')
 def listdealershipsbyhavingcar():
-    ##FAlta
+    ##Falta
     if not session.get('logged_in'):
         return redirect(url_for('login'))
 
@@ -551,6 +551,23 @@ def deleteaccount():
     dbsession.close()
     session.pop('logged_in', None)
     return redirect(url_for('login'))
+
+
+@server.route('/getmodels', methods=['GET', 'POST'])
+def getmodels():
+
+    print(request.json)
+    if request.json['car_search_brand'] == 'Audi':
+        data = []
+        data.append({'modelid': '1', 'model': 'teste1'})
+        return jsonify(data=data)
+    if request.json['car_search_brand'] == 'BMW':
+        data = []
+        data.append({'modelid': '2', 'model': 'teste2'})
+        return jsonify(data=data)
+    else:
+        data = []
+        return jsonify(data=data)
 
 
 if __name__ == '__main__':
