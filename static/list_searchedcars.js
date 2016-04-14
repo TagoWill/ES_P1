@@ -28,9 +28,9 @@ var ListSearchedCars = React.createClass({
             listofcars: result.data
         });
         if (result.data!='') {
-            ReactDOM.render(<AccountFOUNDMsg/>, accountactionmsg);
+            ReactDOM.render(<CarsFOUNDMsg/>, actionmsg);
         } else {
-            ReactDOM.render(<AccountNOTFOUNDMsg/>, accountactionmsg);
+            ReactDOM.render(<CarsNOTFOUNDMsg/>, actionmsg);
         }
     },
 
@@ -58,7 +58,8 @@ var ListSearchedCars = React.createClass({
     },
 
     car_searchChange_brand: function (e) {
-        this.setState({car_search_brand: e.target.value})
+        this.setState({car_search_brand: e.target.value});
+        ReactDOM.render(<ModelSelectBox/>, modelselect);
     },
 
     car_searchChange_model: function (e) {
@@ -93,7 +94,7 @@ var ListSearchedCars = React.createClass({
                             <td>Brand</td>
                             <td>Model</td>
                             <td>Fuel</td>
-                            <td>Price Range</td>
+                            <td>Price Range (€)</td>
                             <td>Kilometer Range</td>
                         </tr>
                         <tr>
@@ -110,6 +111,8 @@ var ListSearchedCars = React.createClass({
                             </select></td>
                             <td><select onChange={this.car_searchChange_model} value={this.state.car_search_model}>
                                 <option defaultValue="selected">All</option>
+                                <option>320i</option>
+                                <option>SLK200</option>
                             </select></td>
                             <td><select onChange={this.car_searchChange_fuel} value={this.state.car_search_fuel}>
                                 <option defaultValue="selected">All</option>
@@ -118,12 +121,13 @@ var ListSearchedCars = React.createClass({
                             </select></td>
                             <td><select onChange={this.car_searchChange_price} value={this.state.car_search_price}>
                                 <option defaultValue="selected">All Prices</option>
-                                <option>0€ - 5.000€</option>
-                                <option>5.000€ - 10.000€</option>
-                                <option>10.000€ - 15.000€</option>
-                                <option>15.000€ - 20.000€</option>
-                                <option>20.000€ - 25.000€</option>
-                                <option>25.000€ - 30.000€</option>
+                                <option>0 - 5.000</option>
+                                <option>5.000 - 10.000</option>
+                                <option>10.000 - 15.000</option>
+                                <option>15.000 - 20.000</option>
+                                <option>20.000 - 25.000</option>
+                                <option>25.000 - 30.000</option>
+                                <option>>=30.000</option>
                             </select></td>
                             <td><select onChange={this.car_searchChange_kmrange} value={this.state.car_search_kmrange}>
                                 <option defaultValue="selected">All</option>
@@ -160,21 +164,35 @@ var ListSearchedCars = React.createClass({
     }
 });
 
-var AccountFOUNDMsg = React.createClass({
+var ModelSelectBox = React.createClass({
+    render: function() {
+        return (
+            <div id="modelselect_div">
+                <select>
+                    <option defaultValue="selected">All</option>
+                    <option>320i</option>
+                    <option>SLK200</option>
+                </select>
+            </div>
+        )
+    }
+});
+
+var CarsFOUNDMsg = React.createClass({
     render: function() {
         console.log(ListSearchedCars.listofcars);
         return (
-            <div id="accountactionmsg_div">
+            <div id="actionmsg_div">
                 Cars Found!
             </div>
         )
     }
 });
 
-var AccountNOTFOUNDMsg = React.createClass({
+var CarsNOTFOUNDMsg = React.createClass({
     render: function() {
         return (
-            <div id="accountactionmsg_div">
+            <div id="actionmsg_div">
                 Cars Not Found!
             </div>
         )

@@ -2,6 +2,7 @@ from flask import Flask, request, render_template, jsonify, abort, redirect, url
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from database import User, Base, Car, Dealership
+import math
 import os
 
 
@@ -151,32 +152,73 @@ def listsearchedcars():
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
     dbsession = DBSession()
+    carslist = []
 
+    # ALL CARS
     if request.json['car_search_brand'] == 'All' and request.json['car_search_model'] == 'All' and \
                     request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] == 'All Prices' and \
                     request.json['car_search_kmrange'] == 'All':
         carslist = dbsession.query(Car).all()
+    # CARS FROM BRAND X
     elif request.json['car_search_brand'] != 'All' and request.json['car_search_model'] == 'All' and \
                     request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] == 'All Prices' and \
                     request.json['car_search_kmrange'] == 'All':
         carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']).all()
-    elif request.json['car_search_brand'] == 'All' and request.json['car_search_model'] != 'All' and \
+    # CARS FROM BRAND X AND MODEL Y
+    elif request.json['car_search_brand'] != 'All' and request.json['car_search_model'] != 'All' and \
                     request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] == 'All Prices' and \
                     request.json['car_search_kmrange'] == 'All':
-        carslist = dbsession.query(Car).filter_by(model=request.json['car_search_model']).all()
+        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand'])\
+                                        .filter_by(model=request.json['car_search_model']).all()
+    # CARS FROM FUEL X
     elif request.json['car_search_brand'] == 'All' and request.json['car_search_model'] == 'All' and \
                     request.json['car_search_fuel'] != 'All' and request.json['car_search_price'] == 'All Prices' and \
                     request.json['car_search_kmrange'] == 'All':
         carslist = dbsession.query(Car).filter_by(fuel=request.json['car_search_fuel']).all()
+    # CARS FROM PRICES BETWEEN X AND Y
     elif request.json['car_search_brand'] == 'All' and request.json['car_search_model'] == 'All' and \
              request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] != 'All Prices' and \
              request.json['car_search_kmrange'] == 'All':
-        carslist = dbsession.query(Car).filter_by(price=request.json['car_search_price']).all()
+        if request.json['car_search_price'] == '0 - 5.000':
+            carslist = dbsession.query(Car).filter(Car.price <= 5000).all()
+        if request.json['car_search_price'] == '5.000 - 10.000':
+            carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).all()
+        if request.json['car_search_price'] == '10.000 - 15.000':
+            carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).all()
+        if request.json['car_search_price'] == '15.000 - 20.000':
+            carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).all()
+        if request.json['car_search_price'] == '20.000 - 25.000':
+            carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).all()
+        if request.json['car_search_price'] == '25.000 - 30.000':
+            carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).all()
+        if request.json['car_search_price'] == '>=30.000':
+            carslist = dbsession.query(Car).filter(Car.price >= 30000).all()
+    # CARS IN MY DISTRICT
     elif request.json['car_search_brand'] == 'All' and request.json['car_search_model'] == 'All' and \
              request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] == 'All Prices' and \
              request.json['car_search_kmrange'] != 'All':
         carslist = dbsession.query(Car).filter(Car.mydealership.any(Dealership.district == request.json['car_search_kmrange'])).all()
+    # CARS FROM BRAND X AND FUEL Y
+    elif request.json['car_search_brand'] != 'All' and request.json['car_search_model'] == 'All' and \
+             request.json['car_search_fuel'] != 'All' and request.json['car_search_price'] == 'All Prices' and \
+             request.json['car_search_kmrange'] == 'All':
+        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand'])\
+                                        .filter_by(fuel=request.json['car_search_fuel']).all()
+    # CARS FROM BRAND X AND PRICES BETWEEN Y AND Z
+    elif request.json['car_search_brand'] != 'All' and request.json['car_search_model'] != 'All' and \
+                    request.json['car_search_fuel'] == 'All' and request.json['car_search_price'] != 'All Prices' and \
+                    request.json['car_search_kmrange'] == 'All':
+        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand'])\
+                                        .filter_by(price=request.json['car_search_price']).all()
+    # CARS FROM BRAND X AND IN MY DISTRICT
+    elif request.json['car_search_brand'] != 'All' and request.json['car_search_model'] == 'All' and \
+                    request.json['car_search_fuel'] != 'All' and request.json['car_search_price'] == 'All Prices' and \
+                    request.json['car_search_kmrange'] != 'All':
+        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']).\
+                                        filter(Car.mydealership.any(Dealership.district == request.json['car_search_kmrange'])).all()
 
+
+    #dist = distance_on_unit_sphere();
 
 
     dbsession.close()
@@ -193,6 +235,30 @@ def listsearchedcars():
                  'price': item.price, 'dealership': asdf, 'district': fdsa})
     print(data)
     return jsonify(data=data)
+
+
+def distance_on_unit_sphere(lat1, long1, lat2, long2):
+    # Convert latitude and longitude to
+    # spherical coordinates in radians.
+    degrees_to_radians = math.pi/180.0
+    # phi = 90 - latitude
+    phi1 = (90.0 - lat1)*degrees_to_radians
+    phi2 = (90.0 - lat2)*degrees_to_radians
+    # theta = longitude
+    theta1 = long1*degrees_to_radians
+    theta2 = long2*degrees_to_radians
+    # Compute spherical distance from spherical coordinates.
+    # For two locations in spherical coordinates
+    # (1, theta, phi) and (1, theta', phi')
+    # cosine( arc length ) =
+    #    sin phi sin phi' cos(theta-theta') + cos phi cos phi'
+    # distance = rho * arc length
+    cos = (math.sin(phi1)*math.sin(phi2)*math.cos(theta1 - theta2) +
+           math.cos(phi1)*math.cos(phi2))
+    arc = math.acos( cos )
+    # Remember to multiply arc by the radius of the earth
+    # in your favorite set of units to get length.
+    return arc
 
 
 @server.route("/addcar", methods=['GET', 'POST'])
@@ -294,6 +360,7 @@ def image():
             #                       filename=filename))
             return redirect(url_for('mycars'))
     return redirect(url_for('home'))
+
 
 @server.route('/uploads/<filename>')
 def uploaded_file(filename):
