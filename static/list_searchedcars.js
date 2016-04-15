@@ -3,7 +3,7 @@ var ListSearchedCars = React.createClass({
     getInitialState: function() {
     return{
         listofcars: [],
-        car_search_brand: '',
+        car_search_brand: 'All',
         car_search_model: 'All',
         car_search_fuel: 'All',
         car_search_price: 'All Prices',
@@ -60,9 +60,7 @@ var ListSearchedCars = React.createClass({
 
     car_searchChange_brand: function (e) {
         this.setState({car_search_brand: e.target.value});
-        //console.log('cheguei aquii' + e.target.value);
-        //ReactDOM.render(<ModelSelectBox/>, modelselect);
-        //this.getmodels;
+
         var data = {
             car_search_brand: e.target.value
         }
@@ -108,7 +106,7 @@ var ListSearchedCars = React.createClass({
         };
 
         var iteracaoDosModels = function (item) {
-            return <option value={item.modelid}>{item.model}</option>
+            return <option>{item.model}</option>
         }
 
         return (
@@ -128,11 +126,11 @@ var ListSearchedCars = React.createClass({
                                 <option>Audi</option>
                                 <option>BMW</option>
                                 <option>Ferrari</option>
-                                <option>Fiat</option>
+                                <option>Ford</option>
                                 <option>Mercedes</option>
                                 <option>Opel</option>
                                 <option>Seat</option>
-                                <option>Wolkswagen</option>
+                                <option>Volkswagen</option>
                             </select></td>
                             <td><select onChange={this.car_searchChange_model} value={this.state.car_search_model}>
                                 <option defaultValue="selected">All</option>
@@ -183,20 +181,6 @@ var ListSearchedCars = React.createClass({
                         </tbody>
                     </table>
                 </form>
-            </div>
-        )
-    }
-});
-
-var ModelSelectBox = React.createClass({
-    render: function() {
-        return (
-            <div id="modelselect_div">
-                <select>
-                    <option defaultValue="selected">All</option>
-                    <option>320i</option>
-                    <option>SLK200</option>
-                </select>
             </div>
         )
     }
