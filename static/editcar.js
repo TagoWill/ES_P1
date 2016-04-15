@@ -226,7 +226,7 @@ var Desassociation = React.createClass({
 
         $.ajax({
             type: "POST",
-            url: '/desassociatecaranddealership',
+            url: '/dissociatecaranddealership',
             data: JSON.stringify(data),
             contentType: 'application/json;charset=UTF-8',
             dataType: 'json',
@@ -257,18 +257,18 @@ var Desassociation = React.createClass({
 
     render: function() {
         return (
-            <div id="Desassocation">
-            <p>Desassociation</p>
+            <div id="Dissocation">
+            <p>Dissociation</p>
                 <form onSubmit={this.associateDealership}>
                     <select name="play" onChange={this.changeSelectedDealership} value={this.state.selecteddealership}>
                         <option value="50"> </option>
                         {this.state.listofdealeships.map(this.createlistdealerships)}
                     </select>
-                    <button type="submit">Desassociate</button>
+                    <button type="submit">Dissociate</button>
                 </form>
             </div>
       )
     }
 });
 
-ReactDOM.render(<Desassociation />, desassociation);
+ReactDOM.render(<Desassociation />, dissociation);

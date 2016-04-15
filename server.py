@@ -651,8 +651,8 @@ def listdealershipsbyhavingcar():
     return jsonify(data=data)
 
 
-@server.route('/desassociatecaranddealership', methods=['GET', 'POST'])
-def desassociatecaranddealership():
+@server.route('/dissociatecaranddealership', methods=['GET', 'POST'])
+def dissociatecaranddealership():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
 
@@ -669,7 +669,7 @@ def desassociatecaranddealership():
         dbsession.commit()
         dbsession.close()
 
-    return redirect(url_for('listdealershipsbydonthavecar'))
+    return redirect(url_for('listdealershipsbyhavingcar'))
 
 
 @server.route("/mydealerships", methods=['GET', 'POST'])
