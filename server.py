@@ -410,7 +410,7 @@ def associatecaranddealership():
 
 @server.route('/listdealershipsbyhavingcar')
 def listdealershipsbyhavingcar():
-    ##Falta
+    print('list')
     if not session.get('logged_in'):
         return redirect(url_for('login'))
 
@@ -418,7 +418,7 @@ def listdealershipsbyhavingcar():
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
     dbsession = DBSession()
-    dealslist = dbsession.query(Dealership).filter(~Dealership.mycars.any(Car.carid == session['car'])).all()
+    dealslist = dbsession.query(Dealership).filter(Dealership.mycars.any(Car.carid == session['car'])).all()
 
     dbsession.close()
     data = []
@@ -426,6 +426,27 @@ def listdealershipsbyhavingcar():
         data.append({'id': item.dealershipid, 'name': item.name, 'contact': item.contact, 'district': item.district})
     print(data)
     return jsonify(data=data)
+
+
+@server.route('/desassociatecaranddealership', methods=['GET', 'POST'])
+def desassociatecaranddealership():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    if request.method == 'POST':
+        engine = connect_db()
+        Base.metadata.bind = engine
+        DBSession = sessionmaker(bind=engine)
+        dbsession = DBSession()
+
+        car = dbsession.query(Car).filter_by(carid=session['car']).first()
+        dealership = dbsession.query(Dealership).filter_by(dealershipid=request.json['selecteddealership']).first()
+        car.mydealership.remove(dealership)
+
+        dbsession.commit()
+        dbsession.close()
+
+    return redirect(url_for('listdealershipsbydonthavecar'))
 
 
 @server.route("/mydealerships", methods=['GET', 'POST'])
