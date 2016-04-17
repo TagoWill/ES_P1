@@ -3,7 +3,7 @@ var MyDealerships = React.createClass({
     getInitialState: function() {
     return{
         listofdeals: [],
-        dl_search: ''
+        orientation: 'DES'
     };
   },
 
@@ -28,9 +28,15 @@ var MyDealerships = React.createClass({
         e.preventDefault()
         console.log('cheguei aqui')
 
-        var data ={
-            dl_search: this.state.dl_search
+        if(this.state.orientation == 'ASC'){
+            this.setState({orientation: 'DES'});
+        }else{
+            this.setState({orientation: 'ASC'});
         }
+
+        var data ={
+            orientation: this.state.orientation
+        };
 
         $.ajax({
             type: "POST",
@@ -53,6 +59,7 @@ var MyDealerships = React.createClass({
 
         return (
             <form onSubmit={this.handleSubmit}>
+                <button type="submit">Sort</button>
             <table>
                 <thead>
                 <tr>
@@ -66,6 +73,7 @@ var MyDealerships = React.createClass({
                     {this.state.listofdeals.map(createItem)}
                 </tbody>
             </table>
+
             </form>
       )
     }

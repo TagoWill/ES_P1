@@ -695,6 +695,18 @@ def listmydealerships():
     data = []
     for item in dealslist:
         data.append({'id': item.dealershipid, 'name': item.name, 'contact': item.contact, 'district': item.district})
+
+    if request.method == 'POST':
+        print('Post')
+        if request.json['orientation'] == 'ASC':
+            data.sort(key=lambda x: x['name'])
+        else:
+            print('Reverse')
+            data.sort(key=lambda x: x['name'], reverse=True)
+
+    print(data[0]['name'])
+    if request.method == 'GET':
+        data.sort(key=lambda x: x['name'])
     print(data)
     return jsonify(data=data)
 
