@@ -54,78 +54,82 @@ session.add(new_owner5)
 session.commit()
 
 # Insert a Car
-new_car = Car(brand='Audi', model='A3', fuel='Diesel', price=20000, owner_id=new_owner4.userid)
+new_car = Car(brand='Audi', model='A3', fuel='Diesel', price=20000, kms=100000, year=2000,
+              owner_id=new_owner4.userid)
 session.add(new_car)
 session.commit()
 
 # Insert a Car
-new_car2 = Car(brand='BMW', model='320i', fuel='Gasoline', price=25000, owner_id=new_owner.userid)
+new_car2 = Car(brand='BMW', model='320i', fuel='Gasoline', price=25000, kms=250000, year=1999,
+               owner_id=new_owner.userid)
 session.add(new_car2)
 session.commit()
 
 # Insert a Car
-new_car3 = Car(brand='BMW', model='M5', fuel='Gasoline', price=45000, owner_id=new_owner.userid)
+new_car3 = Car(brand='BMW', model='M5', fuel='Gasoline', price=45000, kms=300000, year=2005,
+               owner_id=new_owner.userid)
 session.add(new_car3)
 session.commit()
 
 # Insert a Car
-new_car4 = Car(brand='Ferrari', model='Enzo', fuel='Gasoline', price=50000, owner_id=new_owner3.userid)
+new_car4 = Car(brand='Ferrari', model='Enzo', fuel='Gasoline', price=50000, kms=110000, year=1990,
+               owner_id=new_owner3.userid)
 session.add(new_car4)
 session.commit()
 
 # Insert a Car
-new_car5 = Car(brand='Ford', model='Fiesta', fuel='Diesel', price=5000, owner_id=new_owner3.userid)
+new_car5 = Car(brand='Ford', model='Fiesta', fuel='Diesel', price=5000, kms=150000, year=2007,
+               owner_id=new_owner3.userid)
 session.add(new_car5)
 session.commit()
 
 # Insert a Car
-new_car6 = Car(brand='Opel', model='Insignia', fuel='Diesel', price=17000, owner_id=new_owner5.userid)
+new_car6 = Car(brand='Opel', model='Insignia', fuel='Diesel', price=17000, kms=50000, year=2010,
+               owner_id=new_owner5.userid)
 session.add(new_car6)
 session.commit()
 
 # Insert a Car
-new_car7 = Car(brand='Seat', model='Ibiza', fuel='Diesel', price=7000, owner_id=new_owner2.userid)
+new_car7 = Car(brand='Seat', model='Ibiza', fuel='Diesel', price=7000, kms=70000, year=2013,
+               owner_id=new_owner2.userid)
 session.add(new_car7)
 session.commit()
 
 # Insert a Car
-new_car8 = Car(brand='Volkswagen', model='Astra', fuel='Diesel', price=13000, owner_id=new_owner5.userid)
+new_car8 = Car(brand='Volkswagen', model='Astra', fuel='Diesel', price=13000, kms=160000, year=2009,
+               owner_id=new_owner5.userid)
 session.add(new_car8)
 session.commit()
 
 # Insert a Dealership
-new_deal = Dealership(name='StandDaniel', contact=919999999, district='Aveiro', location_lat=40.1,
-                      location_long=-8.4, seller_id=new_owner.userid)
+new_deal = Dealership(name='StandDaniel', contact=919999999, district='Aveiro', seller_id=new_owner.userid)
 session.add(new_deal)
 session.commit()
 
 # Insert a Car
-new_car2 = Car(brand='Mercedes', model='SLK200', fuel='Gasoline', price=30000, owner_id=new_owner.userid)
+new_car2 = Car(brand='Mercedes', model='SLK200', fuel='Gasoline', price=30000, kms=220000, year=1989,
+               owner_id=new_owner.userid)
 new_car2.mydealership.append(new_deal)
 session.add(new_car2)
 session.commit()
 
 # Insert a Dealership
-new_deal2 = Dealership(name='StandPedro', contact=929999999, district='Lisboa', location_lat=40.1,
-                       location_long=-8.4, seller_id=new_owner2.userid)
+new_deal2 = Dealership(name='StandPedro', contact=929999999, district='Lisboa', seller_id=new_owner2.userid)
 session.add(new_deal2)
 session.commit()
 
 # Insert a Dealership
-new_deal3 = Dealership(name='StandAndreia', contact=939999999, district='Coimbra', location_lat=40.1,
-                       location_long=-8.4, seller_id=new_owner3.userid)
+new_deal3 = Dealership(name='StandAndreia', contact=939999999, district='Coimbra', seller_id=new_owner3.userid)
 session.add(new_deal3)
 session.commit()
 
 # Insert a Dealership
-new_deal4 = Dealership(name='StandFabio', contact=949999999, district='Porto', location_lat=40.1,
-                       location_long=-8.4, seller_id=new_owner4.userid)
+new_deal4 = Dealership(name='StandFabio', contact=949999999, district='Porto', seller_id=new_owner4.userid)
 session.add(new_deal4)
 session.commit()
 
 # Insert a Dealership
-new_deal5 = Dealership(name='StandCatia', contact=959999999, district='Aveiro', location_lat=40.1,
-                       location_long=-8.4, seller_id=new_owner5.userid)
+new_deal5 = Dealership(name='StandCatia', contact=959999999, district='Aveiro', seller_id=new_owner5.userid)
 session.add(new_deal5)
 session.commit()
 
