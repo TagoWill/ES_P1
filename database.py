@@ -25,8 +25,6 @@ class Dealership(Base):
     name = Column(String(250), nullable=False)
     contact = Column(Integer, nullable=False)
     district = Column(String(250), nullable=False)
-    location_lat = Column(Float, nullable=False)
-    location_long = Column(Float, nullable=False)
     seller_id = Column(Integer, ForeignKey('user.userid'))
     seller = relationship(User)
     mycars = relationship(
@@ -42,6 +40,8 @@ class Car(Base):
     model = Column(String(250), nullable=False)
     fuel = Column(String(250), nullable=False)
     price = Column(Integer, nullable=False)
+    kms = Column(Integer, nullable=False)
+    year = Column(Integer, nullable=False)
     owner_id = Column(Integer, ForeignKey('user.userid'))
     owner = relationship(User)
     mydealership = relationship(

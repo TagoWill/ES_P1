@@ -711,6 +711,49 @@ def listmydealerships():
     return jsonify(data=data)
 
 
+@server.route("/mydealershipdetails", methods=['GET', 'POST'])
+def mydealershipdetails():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    session['dealership'] = request.args.get('id', '')
+    return render_template('mydealershipdetails.html')
+
+
+@server.route("/listmydealershipdetails", methods=['GET', 'POST'])
+def listmydealershipdetails():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    engine = connect_db()
+    Base.metadata.bind = engine
+    dbsessionbind = sessionmaker(bind=engine)
+    dbsession = dbsessionbind()
+
+    carslist = dbsession.query(Car).filter(Car.mydealership.any(Dealership.dealershipid == session['dealership'])).all() #CORRIGIR
+
+    dbsession.close()
+    data = []
+    for item in carslist:
+        data.append({'id': item.carid, 'brand': item.brand,
+                     'model': item.model, 'fuel': item.fuel, 'price': item.price})
+    print(data)
+    return jsonify(data=data)
+
+
+@server.route("/listmydealershipdetails2", methods=['GET', 'POST'])
+def listmydealershipdetails2():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+    engine = connect_db()
+    Base.metadata.bind = engine
+    dbsessionbind = sessionmaker(bind=engine)
+    dbsession = dbsessionbind()
+    dealershipinfo = dbsession.query(Dealership).filter_by(dealershipid=session['dealership']).first()
+    dbsession.close()
+    data2 = [{'name': dealershipinfo.name, 'contact': dealershipinfo.contact, 'district': dealershipinfo.district}]
+    print(data2)
+    return jsonify(data2=data2)
+
+
 @server.route("/newdealership", methods=['GET', 'POST'])
 def newdealership():
     if not session.get('logged_in'):
