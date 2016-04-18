@@ -715,6 +715,7 @@ def listmydealerships():
 def mydealershipdetails():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
+    session['dealership'] = request.args.get('id', '')
     return render_template('mydealershipdetails.html')
 
 
@@ -727,7 +728,7 @@ def listmydealershipdetails():
     dbsessionbind = sessionmaker(bind=engine)
     dbsession = dbsessionbind()
 
-    carslist = dbsession.query(Car).filter(Car.mydealership.any(Dealership.dealershipid == 1)).all() #CORRIGIR
+    carslist = dbsession.query(Car).filter(Car.mydealership.any(Dealership.dealershipid == session['dealership'])).all() #CORRIGIR
 
     dbsession.close()
     data = []
@@ -746,7 +747,7 @@ def listmydealershipdetails2():
     Base.metadata.bind = engine
     dbsessionbind = sessionmaker(bind=engine)
     dbsession = dbsessionbind()
-    dealershipinfo = dbsession.query(Dealership).filter_by(dealershipid=1).first()
+    dealershipinfo = dbsession.query(Dealership).filter_by(dealershipid=session['dealership']).first()
     dbsession.close()
     data2 = [{'name': dealershipinfo.name, 'contact': dealershipinfo.contact, 'district': dealershipinfo.district}]
     print(data2)
