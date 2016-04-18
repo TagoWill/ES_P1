@@ -53,7 +53,7 @@ var MyDealerships = React.createClass({
         var createItem = function(item) {
             var linha = [<td>
                     <a href={'dealershipdetail?id='+item.id}>{item.name}</a></td>,
-                                    <td>{item.contact}</td>,<td>{item.district}</td>, <td>FALTA</td>]
+                                    <td>{item.contact}</td>,<td>{item.district}</td>, <td><a href={'editdealership?id='+item.id}>click</a></td>]
             return (<tr>{linha}</tr>)
         };
 

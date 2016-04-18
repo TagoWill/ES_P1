@@ -740,6 +740,37 @@ def new_dealership():
     return render_template('newdealership.html')
 
 
+@server.route("/editdealership", methods=['GET', 'POST'])
+def editdealership():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    session['dealership'] = request.args.get('id', '')
+    return render_template('editdealership.html')
+
+
+@server.route("/edit_dealership", methods=['GET', 'POST'])
+def edit_dealership():
+    if not session.get('logged_in'):
+        return redirect(url_for('login'))
+
+    engine = connect_db()
+    Base.metadata.bind = engine
+    dbsessionbind = sessionmaker(bind=engine)
+    dbsession = dbsessionbind()
+
+    if request.method == 'POST':
+        new_deal = Dealership(name=request.json['name'], contact=request.json['contact'],
+                              district=request.json['district'], location_lat=40.1,
+                              location_long=-8.4, seller_id=session['user_id'])
+        dbsession.add(new_deal)
+        dbsession.commit()
+        data = {'name': new_deal.name, 'contact': new_deal.contact, 'district': new_deal.district}
+        dbsession.close()
+        return jsonify(data)
+    return render_template('newdealership.html')
+
+
 @server.route("/dealership", methods=['GET', 'POST'])
 def dealership():
     if not session.get('logged_in'):
