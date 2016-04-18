@@ -785,8 +785,7 @@ def new_dealership():
 
     if request.method == 'POST':
         new_deal = Dealership(name=request.json['name'], contact=request.json['contact'],
-                              district=request.json['district'], location_lat=40.1,
-                              location_long=-8.4, seller_id=session['user_id'])
+                              district=request.json['district'], seller_id=session['user_id'])
         dbsession.add(new_deal)
         dbsession.commit()
         data = {'name': new_deal.name, 'contact': new_deal.contact, 'district': new_deal.district}
@@ -813,17 +812,21 @@ def edit_dealership():
     Base.metadata.bind = engine
     dbsessionbind = sessionmaker(bind=engine)
     dbsession = dbsessionbind()
+    dealership = dbsession.query(Dealership).filter_by(dealershipid=session['dealership']).first()
 
     if request.method == 'POST':
-        new_deal = Dealership(name=request.json['name'], contact=request.json['contact'],
-                              district=request.json['district'], location_lat=40.1,
-                              location_long=-8.4, seller_id=session['user_id'])
-        dbsession.add(new_deal)
+        dealership.name = request.json['name']
+        dealership.contact = request.json['contact']
+        dealership.district = request.json['district']
         dbsession.commit()
-        data = {'name': new_deal.name, 'contact': new_deal.contact, 'district': new_deal.district}
+        data = {'name': dealership.name, 'contact': dealership.contact, 'district': dealership.district}
         dbsession.close()
         return jsonify(data)
-    return render_template('newdealership.html')
+
+    dbsession.close()
+    data = {'name': dealership.name, 'contact': dealership.contact, 'district': dealership.district}
+    return jsonify(data)
+    #return render_template('newdealership.html')
 
 
 @server.route("/dealership", methods=['GET', 'POST'])
