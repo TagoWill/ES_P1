@@ -4,8 +4,9 @@ from sqlalchemy import create_engine
 from database import User, Base, Car, Dealership
 import math
 import os
+import boto3
 
-UPLOAD_FOLDER = '\statc\image'
+UPLOAD_FOLDER = '\static\image'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 server = Flask(__name__)
@@ -580,6 +581,17 @@ def image():
             filename, file_extension = os.path.splitext(filename)
             file.save(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
                                    session['car'] + file_extension))
+
+            s3 = boto3.client('s3',
+                              aws_access_key_id='AKIAIOWPTVBJOODWRFGQ',
+                              aws_secret_access_key='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')
+
+            s3.upload_file(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
+                                   session['car'] + file_extension), 'esimages3bucket', session['car'] + file_extension)
+
+            os.remove(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
+                                   session['car'] + file_extension))
+
             # return redirect(url_for('uploaded_file',
             #                       filename=filename))
             return redirect(url_for('mycars'))
