@@ -52,6 +52,8 @@ var MyDealershipDetails = React.createClass({
             <td>{item.model}</td>,
             <td>{item.fuel}</td>,
             <td>{item.price}€</td>,
+            <td>{item.kms}</td>,
+            <td>{item.year}</td>,
             <td><a href={'editcar?id='+item.id}>click</a></td>,
             <td><a href={'delete_car?id='+item.id}>click</a></td>]
         return (<tr>{linha}</tr>)
@@ -69,6 +71,8 @@ var MyDealershipDetails = React.createClass({
                     <th>Model</th>
                     <th>Fuel</th>
                     <th>Price</th>
+                    <th>Kilometers</th>
+                    <th>Year</th>
                     <th>Edit</th>
                     <th>Delete</th>
                 </tr>

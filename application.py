@@ -1179,7 +1179,7 @@ def listmydealershipdetails():
     data = []
     for item in carslist:
         data.append({'id': item.carid, 'brand': item.brand,
-                     'model': item.model, 'fuel': item.fuel, 'price': item.price})
+                     'model': item.model, 'fuel': item.fuel, 'price': item.price, 'kms': item.kms,'year': item.year})
     print(data)
     return jsonify(data=data)
 
