@@ -50,7 +50,7 @@ class Car(Base):
         back_populates="mycars")
 
 # Create an engine that stores data in the local directory's
-engine = create_engine('mysql+pymysql://esproject:esproject@esteste.clw9xldhi2rc.eu-west-1.rds.amazonaws.com:3306/esproject1')
+engine = create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
 
 # Create all tables in the engine. This is equivalent to "Create Table"
 # statements in raw SQL.
