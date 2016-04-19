@@ -11,7 +11,7 @@ var EditDealership = React.createClass({
     componentDidMount: function() {
         $.ajax({
             type: "GET",
-            url: '/new_dealership',
+            url: '/edit_dealership',
             data: '',
             contentType: 'application/json;charset=UTF-8',
             //error: this.handleSubmitFailure,
@@ -34,7 +34,7 @@ var EditDealership = React.createClass({
 
         $.ajax({
             type: "POST",
-            url: '/new_dealership',
+            url: '/edit_dealership',
             data: JSON.stringify(data),
             contentType: 'application/json;charset=UTF-8',
             //error: this.handleSubmitFailure,

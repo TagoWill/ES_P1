@@ -53,7 +53,7 @@ var MyCars = React.createClass({
 
     createlistcars: function (item) {
         var linha = [
-            <td><img src={"/static/image/"+item.id + ".jpg"} alt="pic1" height="100" width="120"/></td>,
+            <td><img src={"https://s3-eu-west-1.amazonaws.com/esimages3bucket/"+item.id + ".jpg"} alt="Imagem em falta" height="100" width="120"/></td>,
             <td>
                     <a href={'detailcar?id='+item.id}>{item.brand}</a></td>,
                             <td>{item.model}</td>,

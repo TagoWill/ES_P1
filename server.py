@@ -4,8 +4,9 @@ from sqlalchemy import create_engine
 from database import User, Base, Car, Dealership
 import math
 import os
+import boto3
 
-UPLOAD_FOLDER = '\statc\image'
+UPLOAD_FOLDER = '\static\image'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 server = Flask(__name__)
@@ -843,6 +844,17 @@ def image():
             filename, file_extension = os.path.splitext(filename)
             file.save(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
                                    session['car'] + file_extension))
+
+            s3 = boto3.client('s3',
+                              aws_access_key_id='AKIAIOWPTVBJOODWRFGQ',
+                              aws_secret_access_key='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')
+
+            s3.upload_file(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
+                                   session['car'] + file_extension), 'esimages3bucket', session['car'] + file_extension)
+
+            os.remove(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
+                                   session['car'] + file_extension))
+
             # return redirect(url_for('uploaded_file',
             #                       filename=filename))
             return redirect(url_for('mycars'))
@@ -1036,8 +1048,7 @@ def new_dealership():
 
     if request.method == 'POST':
         new_deal = Dealership(name=request.json['name'], contact=request.json['contact'],
-                              district=request.json['district'], location_lat=40.1,
-                              location_long=-8.4, seller_id=session['user_id'])
+                              district=request.json['district'], seller_id=session['user_id'])
         dbsession.add(new_deal)
         dbsession.commit()
         data = {'name': new_deal.name, 'contact': new_deal.contact, 'district': new_deal.district}
@@ -1064,17 +1075,21 @@ def edit_dealership():
     Base.metadata.bind = engine
     dbsessionbind = sessionmaker(bind=engine)
     dbsession = dbsessionbind()
+    dealership = dbsession.query(Dealership).filter_by(dealershipid=session['dealership']).first()
 
     if request.method == 'POST':
-        new_deal = Dealership(name=request.json['name'], contact=request.json['contact'],
-                              district=request.json['district'], location_lat=40.1,
-                              location_long=-8.4, seller_id=session['user_id'])
-        dbsession.add(new_deal)
+        dealership.name = request.json['name']
+        dealership.contact = request.json['contact']
+        dealership.district = request.json['district']
         dbsession.commit()
-        data = {'name': new_deal.name, 'contact': new_deal.contact, 'district': new_deal.district}
+        data = {'name': dealership.name, 'contact': dealership.contact, 'district': dealership.district}
         dbsession.close()
         return jsonify(data)
-    return render_template('newdealership.html')
+
+    dbsession.close()
+    data = {'name': dealership.name, 'contact': dealership.contact, 'district': dealership.district}
+    return jsonify(data)
+    #return render_template('newdealership.html')
 
 
 @server.route("/dealership", methods=['GET', 'POST'])
