@@ -200,249 +200,536 @@ def listsearchedcars():
     carslist = []
 
     if request.json['car_search_brand'] == 'All':
-        if request.json['car_search_model'] == 'All':
-            if request.json['car_search_fuel'] == 'All':
-                if request.json['car_search_price'] == 'All Prices':
-                    if request.json['car_search_kmrange'] == 'All':
-                        # ALL CARS
-                        carslist = dbsession.query(Car).all()
-                    else:
-                        # CARS IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-                else:
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS BETWEEN PRICES
-                        if request.json['car_search_price'] == '0 - 5.000':
-                            carslist = dbsession.query(Car).filter(Car.price <= 5000).all()
-                        if request.json['car_search_price'] == '5.000 - 10.000':
-                            carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).all()
-                        if request.json['car_search_price'] == '10.000 - 15.000':
-                            carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).all()
-                        if request.json['car_search_price'] == '15.000 - 20.000':
-                            carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).all()
-                        if request.json['car_search_price'] == '20.000 - 25.000':
-                            carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).all()
-                        if request.json['car_search_price'] == '25.000 - 30.000':
-                            carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).all()
-                        if request.json['car_search_price'] == '>=30.000':
-                            carslist = dbsession.query(Car).filter(Car.price >= 30000).all()
-                    else:
-                        # CARS BETWEEN PRICES AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-            else:
-                if request.json['car_search_price'] == 'All Prices':
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS WITH SPECIFIC FUEL
-                        carslist = dbsession.query(Car).filter_by(fuel=request.json['car_search_fuel']).all()
-                    else:
-                        # CARS WITH SPECIFIC FUEL AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-                else:
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS WITH SPECIFIC FUEL AND BETWEEN PRICES
-                        if request.json['car_search_price'] == '0 - 5.000':
-                            carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price <= 5000).all()
-                        if request.json['car_search_price'] == '5.000 - 10.000':
-                            carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 5000).filter(Car.price <= 10000).all()
-                        if request.json['car_search_price'] == '10.000 - 15.000':
-                            carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 10000).filter(Car.price <= 15000).all()
-                        if request.json['car_search_price'] == '15.000 - 20.000':
-                            carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 15000).filter(Car.price <= 20000).all()
-                        if request.json['car_search_price'] == '20.000 - 25.000':
-                            carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 20000).filter(Car.price <= 25000).all()
-                        if request.json['car_search_price'] == '25.000 - 30.000':
-                            carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 25000).filter(Car.price <= 30000).all()
-                        if request.json['car_search_price'] == '>=30.000':
-                            carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 30000).all()
-                    else:
-                        # CARS WITH SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-        else:
-            # CARS FROM ALL BRANDS CANNOT HAVE DIFFERENT MODEL
-            carslist = dbsession.query(Car).all()
+        brand = False
     else:
-        if request.json['car_search_model'] == 'All':
-            if request.json['car_search_fuel'] == 'All':
-                if request.json['car_search_price'] == 'All Prices':
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS FROM SPECIFIC BRAND
-                        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']).all()
-                    else:
-                        # CARS FROM SPECIFIC BRAND AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-                else:
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS FROM SPECIFIC BRAND AND BETWEEN PRICES
-                        if request.json['car_search_price'] == '0 - 5.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.price <= 5000).all()
-                        if request.json['car_search_price'] == '5.000 - 10.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.price >= 5000).filter(Car.price <= 10000).all()
-                        if request.json['car_search_price'] == '10.000 - 15.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.price >= 10000).filter(Car.price <= 15000).all()
-                        if request.json['car_search_price'] == '15.000 - 20.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.price >= 15000).filter(Car.price <= 20000).all()
-                        if request.json['car_search_price'] == '20.000 - 25.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.price >= 20000).filter(Car.price <= 25000).all()
-                        if request.json['car_search_price'] == '25.000 - 30.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.price >= 25000).filter(Car.price <= 30000).all()
-                        if request.json['car_search_price'] == '>=30.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.price >= 30000).all()
-                    else:
-                        # CARS FROM SPECIFIC BRAND AND BETWEEN PRICES AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-            else:
-                if request.json['car_search_price'] == 'All Prices':
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC FUEL
-                        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']) \
-                            .filter_by(fuel=request.json['car_search_fuel']).all()
-                    else:
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC FUEL AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-                else:
-                    if request.json['car_search_kmrange'] == 'All':
-                        if request.json['car_search_price'] == '0 - 5.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price <= 5000).all()
-                        if request.json['car_search_price'] == '5.000 - 10.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 5000).filter(Car.price <= 10000).all()
-                        if request.json['car_search_price'] == '10.000 - 15.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 10000).filter(Car.price <= 15000).all()
-                        if request.json['car_search_price'] == '15.000 - 20.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 15000).filter(Car.price <= 20000).all()
-                        if request.json['car_search_price'] == '20.000 - 25.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 20000).filter(Car.price <= 25000).all()
-                        if request.json['car_search_price'] == '25.000 - 30.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 25000).filter(Car.price <= 30000).all()
-                        if request.json['car_search_price'] == '>=30.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 30000).all()
-                    else:
-                        # CARS FROM SPECIFIC BRAND AND BETWEEN PRICES AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-        else:
-            if request.json['car_search_fuel'] == 'All':
-                if request.json['car_search_price'] == 'All Prices':
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC MODEL
-                        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']) \
-                            .filter_by(model=request.json['car_search_model']).all()
-                    else:
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC MODEL AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-                else:
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC MODEL AND BETWEEN PRICES
-                        if request.json['car_search_price'] == '0 - 5.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.price <= 5000).all()
-                        if request.json['car_search_price'] == '5.000 - 10.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.price >= 5000).filter(Car.price <= 10000).all()
-                        if request.json['car_search_price'] == '10.000 - 15.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.price >= 10000).filter(Car.price <= 15000).all()
-                        if request.json['car_search_price'] == '15.000 - 20.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.price >= 15000).filter(Car.price <= 20000).all()
-                        if request.json['car_search_price'] == '20.000 - 25.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.price >= 20000).filter(Car.price <= 25000).all()
-                        if request.json['car_search_price'] == '25.000 - 30.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.price >= 25000).filter(Car.price <= 30000).all()
-                        if request.json['car_search_price'] == '>=30.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.price >= 30000).all()
-                    else:
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC MODEL AND BETWEEN PRICES AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-            else:
-                if request.json['car_search_price'] == 'All Prices':
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC MODEL AND SPECIFIC FUEL
-                        carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']) \
-                            .filter_by(model=request.json['car_search_model']) \
-                            .filter_by(fuel=request.json['car_search_fuel']).all()
-                    else:
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC MODEL AND SPECIFIC FUEL AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
-                else:
-                    if request.json['car_search_kmrange'] == 'All':
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC MODEL AND SPECIFIC FUEL AND BETWEEN PRICES
-                        if request.json['car_search_price'] == '0 - 5.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price <= 5000).all()
-                        if request.json['car_search_price'] == '5.000 - 10.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 5000).filter(Car.price <= 10000).all()
-                        if request.json['car_search_price'] == '10.000 - 15.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 10000).filter(Car.price <= 15000).all()
-                        if request.json['car_search_price'] == '15.000 - 20.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 15000).filter(Car.price <= 20000).all()
-                        if request.json['car_search_price'] == '20.000 - 25.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 20000).filter(Car.price <= 25000).all()
-                        if request.json['car_search_price'] == '25.000 - 30.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 25000).filter(Car.price <= 30000).all()
-                        if request.json['car_search_price'] == '>=30.000':
-                            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
-                                .filter(Car.model == request.json['car_search_model']) \
-                                .filter(Car.fuel == request.json['car_search_fuel']) \
-                                .filter(Car.price >= 30000).all()
-                    else:
-                        # CARS FROM SPECIFIC BRAND AND SPECIFIC MODEL AND SPECIFIC FUEL, BETWEEN PRICES AND IN KM RANGE
-                        carslist = dbsession.query(Car).all()  # IMPLEMENTAR
+        brand = True
+    if request.json['car_search_model'] == 'All':
+        model = False
+    else:
+        model = True
+    if request.json['car_search_fuel'] == 'All':
+        fuel = False
+    else:
+        fuel = True
+    if request.json['car_search_minprice'] == '0' and request.json['car_search_maxprice'] == '50000':
+        price = False
+    else:
+        price = True
+    if request.json['car_search_kmrange'] == 'All':
+        kmrange = False
+    else:
+        kmrange = True
 
-    # dist = distance_on_unit_sphere();
+    if brand == False and model == False and fuel == False:
+        # ALL CARS
+        if price == False and kmrange == False:
+            carslist = dbsession.query(Car).all()
+        # CARS BETWEEN PRICES
+        elif price == True and kmrange == False:
+            carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
+                .filter(Car.price <= request.json['car_search_maxprice']).all()
+        # CARS IN KM RANGE
+        elif price == False and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.kms > 300000).all()
+        # CARS BETWEEN PRICES AND IN KM RANGE
+        elif price == True and kmrange == True:
+            if request.json['car_search_price'] == '0 - 5.000':
+                if request.json['car_search_kmrange'] == '<=50.000':
+                    carslist = dbsession.query(Car).filter(Car.price <= 5000).filter(Car.kms <= 50000).all()
+                elif request.json['car_search_kmrange'] == '<=100.000':
+                    carslist = dbsession.query(Car).filter(Car.price <= 5000).filter(Car.kms <= 100000).all()
+                elif request.json['car_search_kmrange'] == '<=150.000':
+                    carslist = dbsession.query(Car).filter(Car.price <= 5000).filter(Car.kms <= 150000).all()
+                elif request.json['car_search_kmrange'] == '<=200.000':
+                    carslist = dbsession.query(Car).filter(Car.price <= 5000).filter(Car.kms <= 200000).all()
+                elif request.json['car_search_kmrange'] == '<=250.000':
+                    carslist = dbsession.query(Car).filter(Car.price <= 5000).filter(Car.kms <= 250000).all()
+                elif request.json['car_search_kmrange'] == '<=300.000':
+                    carslist = dbsession.query(Car).filter(Car.price <= 5000).filter(Car.kms <= 300000).all()
+                elif request.json['car_search_kmrange'] == '>300.000':
+                    carslist = dbsession.query(Car).filter(Car.price <= 5000).filter(Car.kms > 300000).all()
+            if request.json['car_search_price'] == '5.000 - 10.000':
+                if request.json['car_search_kmrange'] == '<=50.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).filter(
+                        Car.kms <= 50000).all()
+                elif request.json['car_search_kmrange'] == '<=100.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).filter(
+                        Car.kms <= 100000).all()
+                elif request.json['car_search_kmrange'] == '<=150.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).filter(
+                        Car.kms <= 150000).all()
+                elif request.json['car_search_kmrange'] == '<=200.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).filter(
+                        Car.kms <= 200000).all()
+                elif request.json['car_search_kmrange'] == '<=250.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).filter(
+                        Car.kms <= 250000).all()
+                elif request.json['car_search_kmrange'] == '<=300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).filter(
+                        Car.kms <= 300000).all()
+                elif request.json['car_search_kmrange'] == '>300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 5000).filter(Car.price <= 10000).filter(
+                        Car.kms > 300000).all()
+            if request.json['car_search_price'] == '10.000 - 15.000':
+                if request.json['car_search_kmrange'] == '<=50.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).filter(
+                        Car.kms <= 50000).all()
+                elif request.json['car_search_kmrange'] == '<=100.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).filter(
+                        Car.kms <= 100000).all()
+                elif request.json['car_search_kmrange'] == '<=150.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).filter(
+                        Car.kms <= 150000).all()
+                elif request.json['car_search_kmrange'] == '<=200.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).filter(
+                        Car.kms <= 200000).all()
+                elif request.json['car_search_kmrange'] == '<=250.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).filter(
+                        Car.kms <= 250000).all()
+                elif request.json['car_search_kmrange'] == '<=300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).filter(
+                        Car.kms <= 300000).all()
+                elif request.json['car_search_kmrange'] == '>300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 10000).filter(Car.price <= 15000).filter(
+                        Car.kms > 300000).all()
+            if request.json['car_search_price'] == '15.000 - 20.000':
+                if request.json['car_search_kmrange'] == '<=50.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).filter(
+                        Car.kms <= 50000).all()
+                elif request.json['car_search_kmrange'] == '<=100.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).filter(
+                        Car.kms <= 100000).all()
+                elif request.json['car_search_kmrange'] == '<=150.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).filter(
+                        Car.kms <= 150000).all()
+                elif request.json['car_search_kmrange'] == '<=200.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).filter(
+                        Car.kms <= 200000).all()
+                elif request.json['car_search_kmrange'] == '<=250.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).filter(
+                        Car.kms <= 250000).all()
+                elif request.json['car_search_kmrange'] == '<=300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).filter(
+                        Car.kms <= 300000).all()
+                elif request.json['car_search_kmrange'] == '>300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 15000).filter(Car.price <= 20000).filter(
+                        Car.kms > 300000).all()
+            if request.json['car_search_price'] == '20.000 - 25.000':
+                if request.json['car_search_kmrange'] == '<=50.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).filter(
+                        Car.kms <= 50000).all()
+                elif request.json['car_search_kmrange'] == '<=100.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).filter(
+                        Car.kms <= 100000).all()
+                elif request.json['car_search_kmrange'] == '<=150.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).filter(
+                        Car.kms <= 150000).all()
+                elif request.json['car_search_kmrange'] == '<=200.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).filter(
+                        Car.kms <= 200000).all()
+                elif request.json['car_search_kmrange'] == '<=250.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).filter(
+                        Car.kms <= 250000).all()
+                elif request.json['car_search_kmrange'] == '<=300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).filter(
+                        Car.kms <= 300000).all()
+                elif request.json['car_search_kmrange'] == '>300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 20000).filter(Car.price <= 25000).filter(
+                        Car.kms > 300000).all()
+            if request.json['car_search_price'] == '25.000 - 30.000':
+                if request.json['car_search_kmrange'] == '<=50.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).filter(
+                        Car.kms <= 50000).all()
+                elif request.json['car_search_kmrange'] == '<=100.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).filter(
+                        Car.kms <= 100000).all()
+                elif request.json['car_search_kmrange'] == '<=150.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).filter(
+                        Car.kms <= 150000).all()
+                elif request.json['car_search_kmrange'] == '<=200.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).filter(
+                        Car.kms <= 200000).all()
+                elif request.json['car_search_kmrange'] == '<=250.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).filter(
+                        Car.kms <= 250000).all()
+                elif request.json['car_search_kmrange'] == '<=300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).filter(
+                        Car.kms <= 300000).all()
+                elif request.json['car_search_kmrange'] == '>300.000':
+                    carslist = dbsession.query(Car).filter(Car.price >= 25000).filter(Car.price <= 30000).filter(
+                        Car.kms > 300000).all()
+            if request.json['car_search_price'] == '>30.000':
+                if request.json['car_search_kmrange'] == '<=50.000':
+                    carslist = dbsession.query(Car).filter(Car.price > 30000).filter(Car.kms <= 50000).all()
+                elif request.json['car_search_kmrange'] == '<=100.000':
+                    carslist = dbsession.query(Car).filter(Car.price > 30000).filter(Car.kms <= 100000).all()
+                elif request.json['car_search_kmrange'] == '<=150.000':
+                    carslist = dbsession.query(Car).filter(Car.price > 30000).filter(Car.kms <= 150000).all()
+                elif request.json['car_search_kmrange'] == '<=200.000':
+                    carslist = dbsession.query(Car).filter(Car.price > 30000).filter(Car.kms <= 200000).all()
+                elif request.json['car_search_kmrange'] == '<=250.000':
+                    carslist = dbsession.query(Car).filter(Car.price > 30000).filter(Car.kms <= 250000).all()
+                elif request.json['car_search_kmrange'] == '<=300.000':
+                    carslist = dbsession.query(Car).filter(Car.price > 30000).filter(Car.kms <= 300000).all()
+                elif request.json['car_search_kmrange'] == '>300.000':
+                    carslist = dbsession.query(Car).filter(Car.price > 30000).filter(Car.kms > 300000).all()
+    elif brand == False and model == False and fuel == True:
+        # CARS WITH SPECIFIC FUEL
+        if price == False and kmrange == False:
+            carslist = dbsession.query(Car).filter_by(fuel=request.json['car_search_fuel']).all()
+        # CARS WITH SPECIFIC FUEL AND BETWEEN PRICES
+        elif price == True and kmrange == False:
+                carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel'])\
+                                                .filter(Car.price >= request.json['car_search_minprice']) \
+                                                .filter(Car.price <= request.json['car_search_maxprice']).all()
+        # CARS WITH SPECIFIC FUEL AND IN KM RANGE
+        elif price == False and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE
+        elif price == True and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.fuel==request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+    elif brand == False and model == True and fuel == False:
+        # CARS WITH SPECIFIC MODEL
+        carslist = dbsession.query(Car).all()
+    elif brand == False and model == True and fuel == True:
+        # CARS WITH SPECIFIC MODEL AND SPECIFIC FUEL
+        carslist = dbsession.query(Car).all()
+    elif brand == True and model == True and fuel == True:
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL
+        if price == False and kmrange == False:
+            carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand'])\
+                .filter_by(model=request.json['car_search_model']).filter_by(fuel=request.json['car_search_fuel']).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL AND BETWEEN PRICES
+        elif price == True and kmrange == False:
+            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                .filter(Car.model == request.json['car_search_model'])\
+                .filter(Car.fuel == request.json['car_search_fuel'])\
+                .filter(Car.price >= request.json['car_search_minprice']) \
+                .filter(Car.price <= request.json['car_search_maxprice']).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL AND SPECIFIC FUEL IN KM RANGE
+        elif price == False and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE
+        elif price == True and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.fuel == request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.fuel == request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.fuel == request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.fuel == request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.fuel == request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.fuel == request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.fuel == request.json['car_search_fuel'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+    elif brand == True and model == True and fuel == False:
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL
+        if price == False and kmrange == False:
+            carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']) \
+                                            .filter_by(model=request.json['car_search_model']).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND BETWEEN PRICES
+        elif price == True and kmrange == False:
+            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                .filter(Car.model == request.json['car_search_model'])\
+                .filter(Car.price >= request.json['car_search_minprice']) \
+                .filter(Car.price <= request.json['car_search_maxprice']).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND IN KM RANGE
+        elif price == False and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND BETWEEN PRICES AND IN KM RANGE
+        elif price == True and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand'])\
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand'])\
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand'])\
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand'])\
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand'])\
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand'])\
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand'])\
+                    .filter(Car.model == request.json['car_search_model'])\
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+    elif brand == True and model == False and fuel == True:
+        # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL
+        if price == False and kmrange == False:
+            carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']) \
+                .filter_by(fuel=request.json['car_search_fuel']).all()
+        # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL AND BETWEEN PRICES
+        elif price == True and kmrange == False:
+            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                .filter(Car.fuel == request.json['car_search_fuel'])\
+                .filter(Car.price >= request.json['car_search_minprice']) \
+                .filter(Car.price <= request.json['car_search_maxprice']).all()
+        # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL AND IN KM RANGE
+        elif price == False and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE
+        elif price == True and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+    elif brand == True and model == False and fuel == False:
+        # CARS WITH SPECIFIC BRAND
+        if price == False and kmrange == False:
+            carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']).all()
+        # CARS WITH SPECIFIC BRAND AND BETWEEN PRICES
+        elif price == True and kmrange == False:
+            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                .filter(Car.price >= request.json['car_search_minprice']) \
+                .filter(Car.price <= request.json['car_search_maxprice']).all()
+        # CARS WITH SPECIFIC BRAND AND IN KM RANGE
+        elif price == False and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND BETWEEN PRICES AND IN KM RANGE
+        elif price == True and kmrange == True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
 
     dbsession.close()
     data = []
@@ -455,33 +742,9 @@ def listsearchedcars():
             fdsa = info_item.district
         data.append({'id': item.carid, 'brand': item.brand,
                      'model': item.model, 'fuel': item.fuel,
-                     'price': item.price, 'dealership': asdf, 'district': fdsa})
+                     'price': item.price, 'kms': item.kms, 'year': item.year, 'dealership': asdf, 'district': fdsa})
     print(data)
     return jsonify(data=data)
-
-
-def distance_on_unit_sphere(lat1, long1, lat2, long2):
-    # Convert latitude and longitude to
-    # spherical coordinates in radians.
-    degrees_to_radians = math.pi / 180.0
-    # phi = 90 - latitude
-    phi1 = (90.0 - lat1) * degrees_to_radians
-    phi2 = (90.0 - lat2) * degrees_to_radians
-    # theta = longitude
-    theta1 = long1 * degrees_to_radians
-    theta2 = long2 * degrees_to_radians
-    # Compute spherical distance from spherical coordinates.
-    # For two locations in spherical coordinates
-    # (1, theta, phi) and (1, theta', phi')
-    # cosine( arc length ) =
-    #    sin phi sin phi' cos(theta-theta') + cos phi cos phi'
-    # distance = rho * arc length
-    cos = (math.sin(phi1) * math.sin(phi2) * math.cos(theta1 - theta2) +
-           math.cos(phi1) * math.cos(phi2))
-    arc = math.acos(cos)
-    # Remember to multiply arc by the radius of the earth
-    # in your favorite set of units to get length.
-    return arc
 
 
 @server.route("/addcar", methods=['GET', 'POST'])
@@ -728,7 +991,7 @@ def listmydealershipdetails():
     dbsessionbind = sessionmaker(bind=engine)
     dbsession = dbsessionbind()
 
-    carslist = dbsession.query(Car).filter(Car.mydealership.any(Dealership.dealershipid == session['dealership'])).all() #CORRIGIR
+    carslist = dbsession.query(Car).filter(Car.mydealership.any(Dealership.dealershipid == session['dealership'])).all()
 
     dbsession.close()
     data = []

@@ -6,8 +6,10 @@ var ListSearchedCars = React.createClass({
         car_search_brand: 'All',
         car_search_model: 'All',
         car_search_fuel: 'All',
-        car_search_price: 'All Prices',
+        car_search_minprice: '0',
+        car_search_maxprice: '50000',
         car_search_kmrange: 'All',
+        car_search_year: 'All',
         list_of_models: []
     };
   },
@@ -43,8 +45,10 @@ var ListSearchedCars = React.createClass({
             car_search_brand: this.state.car_search_brand,
             car_search_model: this.state.car_search_model,
             car_search_fuel: this.state.car_search_fuel,
-            car_search_price: this.state.car_search_price,
-            car_search_kmrange: this.state.car_search_kmrange
+            car_search_minprice: this.state.car_search_minprice,
+            car_search_maxprice: this.state.car_search_maxprice,
+            car_search_kmrange: this.state.car_search_kmrange,
+            car_search_year: this.state.car_search_year
         }
 
         $.ajax({
@@ -89,8 +93,12 @@ var ListSearchedCars = React.createClass({
         this.setState({car_search_fuel: e.target.value})
     },
 
-    car_searchChange_price: function (e) {
-        this.setState({car_search_price: e.target.value})
+    car_searchChange_minprice: function (e) {
+        this.setState({car_search_minprice: e.target.value})
+    },
+
+    car_searchChange_maxprice: function (e) {
+        this.setState({car_search_maxprice: e.target.value})
     },
 
     car_searchChange_kmrange: function (e) {
@@ -100,8 +108,9 @@ var ListSearchedCars = React.createClass({
     render: function() {
         var createItem = function(item) {
             var linha = [<td>
-                    <a href={'cardetail?id='+item.id}>{item.brand}</a></td>,,<td>{item.model}</td>,
-                            <td>{item.fuel}</td>,<td>{item.price}€</td>,<td>{item.dealership}</td>,<td>{item.district}</td>]
+                    <a href={'cardetail?id='+item.id}>{item.brand}</a></td>,<td>{item.model}</td>,
+                            <td>{item.fuel}</td>,<td>{item.price}€</td>,<td>{item.kms}Kms</td>,<td>{item.year}</td>,
+                            <td>{item.dealership}</td>,<td>{item.district}</td>];
             return (<tr>{linha}</tr>)
         };
 
@@ -117,8 +126,9 @@ var ListSearchedCars = React.createClass({
                             <td>Brand</td>
                             <td>Model</td>
                             <td>Fuel</td>
-                            <td>Price Range (€)</td>
-                            <td>Kilometer Range</td>
+                            <td>Minimum Price (€)</td>
+                            <td>Maximum Price (€)</td>
+                            <td>Kilometers Range</td>
                         </tr>
                         <tr>
                             <td><select onChange={this.car_searchChange_brand} value={this.state.car_search_brand}>
@@ -141,24 +151,39 @@ var ListSearchedCars = React.createClass({
                                 <option>Gasoline</option>
                                 <option>Diesel</option>
                             </select></td>
-                            <td><select onChange={this.car_searchChange_price} value={this.state.car_search_price}>
-                                <option defaultValue="selected">All Prices</option>
-                                <option>0 - 5.000</option>
-                                <option>5.000 - 10.000</option>
-                                <option>10.000 - 15.000</option>
-                                <option>15.000 - 20.000</option>
-                                <option>20.000 - 25.000</option>
-                                <option>25.000 - 30.000</option>
-                                <option>>=30.000</option>
+                            <td><select onChange={this.car_searchChange_minprice} value={this.state.car_search_minprice}>
+                                <option defaultValue="selected">0</option>
+                                <option>5000</option>
+                                <option>10000</option>
+                                <option>15000</option>
+                                <option>20000</option>
+                                <option>25000</option>
+                                <option>30000</option>
+                                <option>35000</option>
+                                <option>40000</option>
+                                <option>45000</option>
+                            </select></td>
+                            <td><select onChange={this.car_searchChange_maxprice} value={this.state.car_search_maxprice}>
+                                <option defaultValue="selected">50000</option>
+                                <option>45000</option>
+                                <option>40000</option>
+                                <option>35000</option>
+                                <option>30000</option>
+                                <option>25000</option>
+                                <option>20000</option>
+                                <option>15000</option>
+                                <option>10000</option>
+                                <option>5000</option>
                             </select></td>
                             <td><select onChange={this.car_searchChange_kmrange} value={this.state.car_search_kmrange}>
                                 <option defaultValue="selected">All</option>
-                                <option>Coimbra</option>
-                                <option>30KM - 40KM</option>
-                                <option>40KM - 50KM</option>
-                                <option>50KM - 60KM</option>
-                                <option>60KM - 70KM</option>
-                                <option>70KM - 80KM</option>
+                                <option>{"<="}50.000</option>
+                                <option>{"<="}100.000</option>
+                                <option>{"<="}150.000</option>
+                                <option>{"<="}200.000</option>
+                                <option>{"<="}250.000</option>
+                                <option>{"<="}300.000</option>
+                                <option>>300.000</option>
                             </select></td>
                             <td><input type="submit" value="Search"/></td>
                         </tr>
@@ -172,6 +197,8 @@ var ListSearchedCars = React.createClass({
                             <th>Model</th>
                             <th>Fuel</th>
                             <th>Price</th>
+                            <th>Kilometers</th>
+                            <th>Year</th>
                             <th>Dealership</th>
                             <th>District</th>
                         </tr>
