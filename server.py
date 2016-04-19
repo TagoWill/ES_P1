@@ -13,7 +13,7 @@ server = Flask(__name__)
 
 
 def connect_db():
-    return create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
+    return create_engine('mysql+pymysql://esproject:esproject@esteste.clw9xldhi2rc.eu-west-1.rds.amazonaws.com:3306/esproject1')
 
 
 @server.route("/", methods=['GET', 'POST'])
