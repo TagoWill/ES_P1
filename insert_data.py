@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 
 from database import User, Base, Car, Dealership
 
-engine = create_engine('mysql+pymysql://esproject:esproject@esteste.clw9xldhi2rc.eu-west-1.rds.amazonaws.com:3306/esproject1')
+engine = create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
 # Bind the engine to the metadata of the Base class so that the
 # declaratives can be accessed through a DBSession instance
 Base.metadata.bind = engine

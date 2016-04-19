@@ -10,6 +10,7 @@ var ListSearchedCars = React.createClass({
         car_search_maxprice: '50000',
         car_search_kmrange: 'All',
         car_search_year: 'All',
+        car_search_district: '0',
         list_of_models: []
     };
   },
@@ -48,7 +49,8 @@ var ListSearchedCars = React.createClass({
             car_search_minprice: this.state.car_search_minprice,
             car_search_maxprice: this.state.car_search_maxprice,
             car_search_kmrange: this.state.car_search_kmrange,
-            car_search_year: this.state.car_search_year
+            car_search_year: this.state.car_search_year,
+            car_search_district: this.state.car_search_district
         }
 
         $.ajax({
@@ -103,6 +105,14 @@ var ListSearchedCars = React.createClass({
 
     car_searchChange_kmrange: function (e) {
         this.setState({car_search_kmrange: e.target.value})
+    },
+
+    car_searchChange_district: function (e) {
+        if (this.state.car_search_district == '0'){
+            this.setState({car_search_district: '1'})
+        } else {
+            this.setState({car_search_district: '0'})
+        }
     },
 
     render: function() {
@@ -185,6 +195,7 @@ var ListSearchedCars = React.createClass({
                                 <option>{"<="}300.000</option>
                                 <option>>300.000</option>
                             </select></td>
+                            <td><input type="checkbox" name="district" onChange={this.car_searchChange_district} value={this.state.car_search_district}/>In My District </td>
                             <td><input type="submit" value="Search"/></td>
                         </tr>
                     </table>

@@ -9,9 +9,9 @@ UPLOAD_FOLDER = '/static/image'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 application = app = Flask(__name__)
-application.debug = True
-application.secret_key = 'teste'
-application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+#application.debug = True
+#application.secret_key = 'teste'
+#application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def connect_db():
@@ -202,6 +202,8 @@ def listsearchedcars():
     dbsession = dbsessionbind()
     carslist = []
 
+    actualuser = dbsession.query(User).filter_by(email=session.get('user_email')).first()
+
     if request.json['car_search_brand'] == 'All':
         brand = False
     else:
@@ -222,17 +224,22 @@ def listsearchedcars():
         kmrange = False
     else:
         kmrange = True
+    if request.json['car_search_district'] == '0':
+        district = False
+    else:
+        if actualuser.district != '':
+            district = True
 
     if brand is False and model is False and fuel is False:
         # ALL CARS
-        if price is False and kmrange is False:
+        if price is False and kmrange is False and district is False:
             carslist = dbsession.query(Car).all()
         # CARS BETWEEN PRICES
-        elif price is True and kmrange is False:
+        elif price is True and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
                 .filter(Car.price <= request.json['car_search_maxprice']).all()
         # CARS IN KM RANGE
-        elif price is False and kmrange is True:
+        elif price is False and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.kms <= 50000).all()
             elif request.json['car_search_kmrange'] == '<=100.000':
@@ -247,8 +254,11 @@ def listsearchedcars():
                 carslist = dbsession.query(Car).filter(Car.kms <= 300000).all()
             elif request.json['car_search_kmrange'] == '>300.000':
                 carslist = dbsession.query(Car).filter(Car.kms > 300000).all()
+        # CARS IN MY DISTRICT
+        elif price is False and kmrange is False and district is True:
+            carslist = dbsession.query(Car).filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
         # CARS BETWEEN PRICES AND IN KM RANGE
-        elif price is True and kmrange is True:
+        elif price is True and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
                     .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000).all()
@@ -270,17 +280,47 @@ def listsearchedcars():
             elif request.json['car_search_kmrange'] == '>300.000':
                 carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
                     .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+        # CARS BETWEEN PRICES AND IN KM RANGE AND IN MY DISTRICT
+        elif price is True and kmrange is True and district is True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
     elif brand is False and model is False and fuel is True:
         # CARS WITH SPECIFIC FUEL
-        if price is False and kmrange is False:
+        if price is False and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter_by(fuel=request.json['car_search_fuel']).all()
         # CARS WITH SPECIFIC FUEL AND BETWEEN PRICES
-        elif price is True and kmrange is False:
+        elif price is True and kmrange is False and district is False:
                 carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel'])\
                                                 .filter(Car.price >= request.json['car_search_minprice']) \
                                                 .filter(Car.price <= request.json['car_search_maxprice']).all()
         # CARS WITH SPECIFIC FUEL AND IN KM RANGE
-        elif price is False and kmrange is True:
+        elif price is False and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel'])\
                     .filter(Car.kms <= 50000).all()
@@ -302,8 +342,12 @@ def listsearchedcars():
             elif request.json['car_search_kmrange'] == '>300.000':
                 carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel'])\
                     .filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC FUEL AND IN MY DISTRICT
+        elif price is False and kmrange is False and district is True:
+            carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel'])\
+                .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
         # CARS WITH SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE
-        elif price is True and kmrange is True:
+        elif price is True and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel'])\
                     .filter(Car.price >= request.json['car_search_minprice']) \
@@ -332,6 +376,43 @@ def listsearchedcars():
                 carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel'])\
                     .filter(Car.price >= request.json['car_search_minprice']) \
                     .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+                # CARS WITH SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE AND IN MY DISTRICT
+        elif price is True and kmrange is True and district is True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
     elif brand is False and model is True and fuel is False:
         # CARS WITH SPECIFIC MODEL
         carslist = dbsession.query(Car).all()
@@ -340,18 +421,18 @@ def listsearchedcars():
         carslist = dbsession.query(Car).all()
     elif brand is True and model is True and fuel is True:
         # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL
-        if price is False and kmrange is False:
+        if price is False and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand'])\
                 .filter_by(model=request.json['car_search_model']).filter_by(fuel=request.json['car_search_fuel']).all()
         # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL AND BETWEEN PRICES
-        elif price is True and kmrange is False:
+        elif price is True and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                 .filter(Car.model == request.json['car_search_model'])\
                 .filter(Car.fuel == request.json['car_search_fuel'])\
                 .filter(Car.price >= request.json['car_search_minprice']) \
                 .filter(Car.price <= request.json['car_search_maxprice']).all()
         # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL AND SPECIFIC FUEL IN KM RANGE
-        elif price is False and kmrange is True:
+        elif price is False and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 50000).all()
@@ -373,8 +454,14 @@ def listsearchedcars():
             elif request.json['car_search_kmrange'] == '>300.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.model == request.json['car_search_model']).filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL AND IN MY DISTRICT
+        elif price is False and kmrange is False and district is True:
+            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                .filter(Car.model == request.json['car_search_model'])\
+                .filter(Car.fuel == request.json['car_search_fuel'])\
+                .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
         # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE
-        elif price is True and kmrange is True:
+        elif price is True and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.model == request.json['car_search_model'])\
@@ -417,19 +504,70 @@ def listsearchedcars():
                     .filter(Car.fuel == request.json['car_search_fuel'])\
                     .filter(Car.price >= request.json['car_search_minprice']) \
                     .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE AND IN MY DISTRICT
+        elif price is True and kmrange is True and district is True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
     elif brand is True and model is True and fuel is False:
         # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL
-        if price is False and kmrange is False:
+        if price is False and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']) \
                                             .filter_by(model=request.json['car_search_model']).all()
         # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND BETWEEN PRICES
-        elif price is True and kmrange is False:
+        elif price is True and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                 .filter(Car.model == request.json['car_search_model'])\
                 .filter(Car.price >= request.json['car_search_minprice']) \
                 .filter(Car.price <= request.json['car_search_maxprice']).all()
         # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND IN KM RANGE
-        elif price is False and kmrange is True:
+        elif price is False and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.model == request.json['car_search_model']).filter(Car.kms <= 50000).all()
@@ -451,8 +589,13 @@ def listsearchedcars():
             elif request.json['car_search_kmrange'] == '>300.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.model == request.json['car_search_model']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND IN MY DISTRICT
+        elif price is False and kmrange is False and district is True:
+            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                .filter(Car.model == request.json['car_search_model'])\
+                .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
         # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND BETWEEN PRICES AND IN KM RANGE
-        elif price is True and kmrange is True:
+        elif price is True and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand'])\
                     .filter(Car.model == request.json['car_search_model'])\
@@ -488,19 +631,63 @@ def listsearchedcars():
                     .filter(Car.model == request.json['car_search_model'])\
                     .filter(Car.price >= request.json['car_search_minprice']) \
                     .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND WITH SPECIFIC MODEL AND BETWEEN PRICES AND IN KM RANGE AND IN MY DISTRICT
+        elif price is True and kmrange is True and district is True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.model == request.json['car_search_model']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
     elif brand is True and model is False and fuel is True:
         # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL
-        if price is False and kmrange is False:
+        if price is False and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']) \
                 .filter_by(fuel=request.json['car_search_fuel']).all()
         # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL AND BETWEEN PRICES
-        elif price is True and kmrange is False:
+        elif price is True and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                 .filter(Car.fuel == request.json['car_search_fuel'])\
                 .filter(Car.price >= request.json['car_search_minprice']) \
                 .filter(Car.price <= request.json['car_search_maxprice']).all()
         # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL AND IN KM RANGE
-        elif price is False and kmrange is True:
+        elif price is False and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms <= 50000).all()
@@ -522,8 +709,13 @@ def listsearchedcars():
             elif request.json['car_search_kmrange'] == '>300.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.fuel == request.json['car_search_fuel']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL AND IN MY DISTRICT
+        elif price is False and kmrange is False and district is True:
+            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                .filter(Car.fuel == request.json['car_search_fuel'])\
+                .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
         # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE
-        elif price is True and kmrange is True:
+        elif price is True and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.fuel == request.json['car_search_fuel']) \
@@ -559,17 +751,61 @@ def listsearchedcars():
                     .filter(Car.fuel == request.json['car_search_fuel']) \
                     .filter(Car.price >= request.json['car_search_minprice']) \
                     .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND SPECIFIC FUEL AND BETWEEN PRICES AND IN KM RANGE AND IN MY DISTRICT
+        elif price is True and kmrange is True and district is True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.fuel == request.json['car_search_fuel']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
     elif brand is True and model is False and fuel is False:
         # CARS WITH SPECIFIC BRAND
-        if price is False and kmrange is False:
+        if price is False and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter_by(brand=request.json['car_search_brand']).all()
         # CARS WITH SPECIFIC BRAND AND BETWEEN PRICES
-        elif price is True and kmrange is False:
+        elif price is True and kmrange is False and district is False:
             carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                 .filter(Car.price >= request.json['car_search_minprice']) \
                 .filter(Car.price <= request.json['car_search_maxprice']).all()
         # CARS WITH SPECIFIC BRAND AND IN KM RANGE
-        elif price is False and kmrange is True:
+        elif price is False and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.kms <= 50000).all()
@@ -591,8 +827,12 @@ def listsearchedcars():
             elif request.json['car_search_kmrange'] == '>300.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND IN MY DISTRICT
+        elif price is False and kmrange is False and district is True:
+            carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
         # CARS WITH SPECIFIC BRAND AND BETWEEN PRICES AND IN KM RANGE
-        elif price is True and kmrange is True:
+        elif price is True and kmrange is True and district is False:
             if request.json['car_search_kmrange'] == '<=50.000':
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.price >= request.json['car_search_minprice']) \
@@ -621,6 +861,43 @@ def listsearchedcars():
                 carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
                     .filter(Car.price >= request.json['car_search_minprice']) \
                     .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000).all()
+        # CARS WITH SPECIFIC BRAND AND BETWEEN PRICES AND IN KM RANGE AND IN MY DISTRICT
+        elif price is True and kmrange is True and district is True:
+            if request.json['car_search_kmrange'] == '<=50.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 50000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=100.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 100000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=150.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 150000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=200.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 200000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=250.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 250000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '<=300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms <= 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
+            elif request.json['car_search_kmrange'] == '>300.000':
+                carslist = dbsession.query(Car).filter(Car.brand == request.json['car_search_brand']) \
+                    .filter(Car.price >= request.json['car_search_minprice']) \
+                    .filter(Car.price <= request.json['car_search_maxprice']).filter(Car.kms > 300000) \
+                    .filter(Car.mydealership.any(Dealership.district == actualuser.district)).all()
 
     dbsession.close()
     data = []
@@ -1053,8 +1330,7 @@ def deleteaccount():
     return redirect(url_for('login'))
 
 
-'''if __name__ == '__main__':
+if __name__ == '__main__':
     application.secret_key = 'teste'
     application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     application.run(debug=True)
-'''
