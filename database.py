@@ -17,6 +17,7 @@ class User(Base):
     type = Column(String(250), nullable=False)
     email = Column(String(250), nullable=False)
     password = Column(String(250), nullable=False)
+    district = Column(String(250), nullable=True)
 
 
 class Dealership(Base):

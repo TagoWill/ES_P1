@@ -19,17 +19,17 @@ DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
 # Insert a User
-new_client = User(name='Tiago', type='client', email='tiago@gmail.pt', password='123')
+new_client = User(name='Tiago', type='client', email='tiago@gmail.pt', password='123', district='Coimbra')
 session.add(new_client)
 session.commit()
 
 # Insert a User
-new_client2 = User(name='Joao', type='client', email='joao@gmail.pt', password='123')
+new_client2 = User(name='Joao', type='client', email='joao@gmail.pt', password='123', district='Lisboa')
 session.add(new_client2)
 session.commit()
 
 # Insert a User
-new_owner = User(name='Daniel', type='owner', email='dbastos@gmail.pt', password='123')
+new_owner = User(name='Daniel', type='owner', email='dbastos@gmail.pt', password='123', district='Coimbra')
 session.add(new_owner)
 session.commit()
 

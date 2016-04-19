@@ -4,6 +4,7 @@ var EditAccount = React.createClass({
     return{
         name: '',
         email: '',
+        district: '',
         password: ''
     };
   },
@@ -28,6 +29,7 @@ var EditAccount = React.createClass({
         var data = {
             name: this.state.name,
             email: this.state.email,
+            district: this.state.district,
             password: this.state.password
         }
 
@@ -77,6 +79,7 @@ var EditAccount = React.createClass({
         //console.log(result.name);
         this.setState({name: result.name})
         this.setState({email: result.email})
+        this.setState({district: result.district})
         this.setState({password: result.password})
     },
 
@@ -90,6 +93,10 @@ var EditAccount = React.createClass({
 
     nameChange: function (e) {
         this.setState({name: e.target.value})
+    },
+    
+    districtChange: function (e) {
+        this.setState({district: e.target.district})
     },
 
     PopUpFunction: function () {
@@ -108,6 +115,9 @@ var EditAccount = React.createClass({
                     <br></br>
                     <br></br>
                     Email: <input type="text" onChange={this.emailChange} value={this.state.email}/>
+                    <br></br>
+                    <br></br>
+                    district: <input type="text" onChange={this.districtChange} value={this.state.district}/>
                     <br></br>
                     <br></br>
                     Password: <input type="password" onChange={this.passChange} value={this.state.password}/>

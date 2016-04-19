@@ -2,7 +2,6 @@ from flask import Flask, request, render_template, jsonify, abort, redirect, url
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import create_engine
 from database import User, Base, Car, Dealership
-import math
 import os
 import boto3
 
@@ -1012,17 +1011,18 @@ def editaccount():
     if request.method == 'POST':
         useraccount.email = request.json['email']
         useraccount.name = request.json['name']
+        useraccount.district = request.json['district']
         session['user_name'] = useraccount.name
         print(request.json)
         useraccount.password = request.json['password']
         dbsession.commit()
 
-        data = {'name': useraccount.name, 'email': useraccount.email}
+        data = {'name': useraccount.name, 'email': useraccount.email, 'district': useraccount.district}
         dbsession.close()
         return jsonify(data)
 
     dbsession.close()
-    data = {'name': useraccount.name, 'email': useraccount.email}
+    data = {'name': useraccount.name, 'email': useraccount.email, 'district': useraccount.district}
     return jsonify(data)
 
 
