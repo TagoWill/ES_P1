@@ -6,7 +6,8 @@ var AddCar = React.createClass({
         model: '',
         fuel: '',
         price: '',
-        kms: ''
+        kms: '',
+        year: ''
     };
   },
 
@@ -31,7 +32,8 @@ var AddCar = React.createClass({
             model: this.state.model,
             fuel: this.state.fuel,
             price: this.state.price,
-            kms: this.state.kms
+            kms: this.state.kms,
+            year: this.state.year
         }
 
         console.log(data)
@@ -54,7 +56,8 @@ var AddCar = React.createClass({
         this.setState({model: result.model})
         this.setState({fuel: result.fuel})
         this.setState({price: result.price})
-        this.setState({price: result.kms})
+        this.setState({kms: result.kms})
+        this.setState({year: result.year})
     },
 
     modelChange: function (e) {
@@ -76,6 +79,10 @@ var AddCar = React.createClass({
     kmsChange: function (e) {
         this.setState({kms: e.target.value})
     },
+    
+    yearChange: function (e) {
+        this.setState({year: e.target.value})
+    },
 
     render: function() {
         return (
@@ -94,6 +101,9 @@ var AddCar = React.createClass({
                 <br></br>
                 <br></br>
                 Kms: <input type="text" onChange={this.kmsChange} value={ this.state.kms}/>
+                <br></br>
+                <br></br>
+                Year: <input type="text" onChange={this.yearChange} value={ this.state.year}/>
                 <br></br>
                 <br></br>
                 <input type="submit" value="Save"/>

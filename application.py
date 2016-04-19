@@ -140,7 +140,7 @@ def listmycars():
     data = []
     for item in carslist:
         data.append({'id': item.carid, 'brand': item.brand,
-                     'model': item.model, 'fuel': item.fuel, 'price': item.price})
+                     'model': item.model, 'fuel': item.fuel, 'price': item.price, 'kms': item.kms, 'year': item.year})
     print(data)
     return jsonify(data=data)
 
@@ -934,10 +934,10 @@ def add_car():
 
     if request.method == 'POST':
         new_car = Car(brand=request.json['brand'], model=request.json['model'],
-                      fuel=request.json['fuel'], price=request.json['price'], owner_id=session['user_id'], kms= request.json['kms'])
+                      fuel=request.json['fuel'], price=request.json['price'], owner_id=session['user_id'], kms= request.json['kms'], year= request.json['year'])
         dbsession.add(new_car)
         dbsession.commit()
-        data = {'brand': new_car.brand, 'model': new_car.model, 'fuel': new_car.fuel, 'price': new_car.price, 'kms': new_car.kms}
+        data = {'brand': new_car.brand, 'model': new_car.model, 'fuel': new_car.fuel, 'price': new_car.price, 'kms': new_car.kms, 'year': new_car.year}
         dbsession.close()
         return jsonify(data)
     return render_template('addcar.html')
@@ -969,15 +969,17 @@ def edit_car():
         car.fuel = request.json['fuel']
         car.price = request.json['price']
         car.kms = request.json['kms']
+        car.year = request.json['year']
         car.owner_id = session['user_id']
         dbsession.commit()
 
-        data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price, 'kms': car.kms}
+        data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price, 'kms': car.kms, 'year': car.year}
         dbsession.close()
         return jsonify(data)
 
     dbsession.close()
-    data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price, 'kms': car.kms}
+    data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price, 'kms': car.kms, 'year': car.year}
+    print(data)
     return jsonify(data)
 
 
