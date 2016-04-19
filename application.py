@@ -5,7 +5,7 @@ from database import User, Base, Car, Dealership
 import os
 import boto3
 
-UPLOAD_FOLDER = '\static\image'
+UPLOAD_FOLDER = '/static/image'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 application = app = Flask(__name__)
@@ -657,10 +657,10 @@ def add_car():
 
     if request.method == 'POST':
         new_car = Car(brand=request.json['brand'], model=request.json['model'],
-                      fuel=request.json['fuel'], price=request.json['price'], owner_id=session['user_id'])
+                      fuel=request.json['fuel'], price=request.json['price'], owner_id=session['user_id'], kms= request.json['kms'])
         dbsession.add(new_car)
         dbsession.commit()
-        data = {'brand': new_car.brand, 'model': new_car.model, 'fuel': new_car.fuel, 'price': new_car.price}
+        data = {'brand': new_car.brand, 'model': new_car.model, 'fuel': new_car.fuel, 'price': new_car.price, 'kms': new_car.kms}
         dbsession.close()
         return jsonify(data)
     return render_template('addcar.html')
@@ -691,15 +691,16 @@ def edit_car():
         car.model = request.json['model']
         car.fuel = request.json['fuel']
         car.price = request.json['price']
+        car.kms = request.json['kms']
         car.owner_id = session['user_id']
         dbsession.commit()
 
-        data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price}
+        data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price, 'kms': car.kms}
         dbsession.close()
         return jsonify(data)
 
     dbsession.close()
-    data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price}
+    data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price, 'kms': car.kms}
     return jsonify(data)
 
 
