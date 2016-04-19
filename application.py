@@ -9,14 +9,17 @@ import boto3
 UPLOAD_FOLDER = '\static\image'
 ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
-server = Flask(__name__)
+application = app = Flask(__name__)
+application.debug = True
+application.secret_key = 'teste'
+application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 
 def connect_db():
     return create_engine('mysql+pymysql://esproject:esproject@localhost:3306/esproject1')
 
 
-@server.route("/", methods=['GET', 'POST'])
+@application.route("/", methods=['GET', 'POST'])
 def login():
     if session.get('logged_in'):
         return redirect(url_for('home'))
@@ -43,13 +46,13 @@ def login():
     return render_template('login.html', error=error)
 
 
-@server.route("/logout")
+@application.route("/logout")
 def logout():
     session.pop('logged_in', None)
     return redirect(url_for('login'))
 
 
-@server.route("/register", methods=['GET', 'POST'])
+@application.route("/register", methods=['GET', 'POST'])
 def register():
     if session.get('logged_in'):
         return redirect(url_for('home'))
@@ -72,7 +75,7 @@ def register():
     return render_template('register.html', error=error)
 
 
-@server.route("/home", methods=['GET'])
+@application.route("/home", methods=['GET'])
 def home():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -82,7 +85,7 @@ def home():
         return render_template('owner_home.html')
 
 
-@server.route("/search", methods=['GET', 'POST'])
+@application.route("/search", methods=['GET', 'POST'])
 def search():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -92,7 +95,7 @@ def search():
         return render_template('owner_search.html')
 
 
-@server.route("/listclients", methods=['GET', 'POST'])
+@application.route("/listclients", methods=['GET', 'POST'])
 def listclients():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -115,14 +118,14 @@ def listclients():
     return jsonify(data=data)
 
 
-@server.route("/mycars", methods=['GET', 'POST'])
+@application.route("/mycars", methods=['GET', 'POST'])
 def mycars():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     return render_template('mycars.html')
 
 
-@server.route("/listmycars", methods=['GET', 'POST'])
+@application.route("/listmycars", methods=['GET', 'POST'])
 def listmycars():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -143,7 +146,7 @@ def listmycars():
     return jsonify(data=data)
 
 
-@server.route('/getmodels', methods=['GET', 'POST'])
+@application.route('/getmodels', methods=['GET', 'POST'])
 def getmodels():
     # print(request.json)
     data = []
@@ -189,7 +192,7 @@ def getmodels():
     return jsonify(data=data)
 
 
-@server.route("/listsearchedcars", methods=['GET', 'POST'])
+@application.route("/listsearchedcars", methods=['GET', 'POST'])
 def listsearchedcars():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -636,14 +639,14 @@ def listsearchedcars():
     return jsonify(data=data)
 
 
-@server.route("/addcar", methods=['GET', 'POST'])
+@application.route("/addcar", methods=['GET', 'POST'])
 def addcar():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     return render_template('addcar.html')
 
 
-@server.route("/add_car", methods=['GET', 'POST'])
+@application.route("/add_car", methods=['GET', 'POST'])
 def add_car():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -664,7 +667,7 @@ def add_car():
     return render_template('addcar.html')
 
 
-@server.route("/editcar", methods=['GET', 'POST'])
+@application.route("/editcar", methods=['GET', 'POST'])
 def editcar():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -673,7 +676,7 @@ def editcar():
     return render_template('editcar.html')
 
 
-@server.route("/edit_car", methods=['GET', 'POST'])
+@application.route("/edit_car", methods=['GET', 'POST'])
 def edit_car():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -701,7 +704,7 @@ def edit_car():
     return jsonify(data)
 
 
-@server.route("/delete_car", methods=['GET', 'POST'])
+@application.route("/delete_car", methods=['GET', 'POST'])
 def delete_car():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -723,24 +726,24 @@ def allowed_file(filename):
            filename.rsplit('.', 1)[1] in ALLOWED_EXTENSIONS
 
 
-@server.route("/image", methods=['GET', 'POST'])
+@application.route("/image", methods=['GET', 'POST'])
 def image():
     if request.method == 'POST':
         file = request.files['file']
         if file and allowed_file(file.filename):
             filename = file.filename
             filename, file_extension = os.path.splitext(filename)
-            file.save(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
+            file.save(os.path.join(os.path.dirname(__file__) + application.config['UPLOAD_FOLDER'],
                                    session['car'] + file_extension))
 
             s3 = boto3.client('s3',
                               aws_access_key_id='AKIAIOWPTVBJOODWRFGQ',
                               aws_secret_access_key='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')
 
-            s3.upload_file(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
+            s3.upload_file(os.path.join(os.path.dirname(__file__) + application.config['UPLOAD_FOLDER'],
                                    session['car'] + file_extension), 'esimages3bucket', session['car'] + file_extension)
 
-            os.remove(os.path.join(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
+            os.remove(os.path.join(os.path.dirname(__file__) + application.config['UPLOAD_FOLDER'],
                                    session['car'] + file_extension))
 
             # return redirect(url_for('uploaded_file',
@@ -749,13 +752,13 @@ def image():
     return redirect(url_for('home'))
 
 
-@server.route('/uploads/<filename>')
+@application.route('/uploads/<filename>')
 def uploaded_file(filename):
-    return send_from_directory(os.path.dirname(__file__) + server.config['UPLOAD_FOLDER'],
+    return send_from_directory(os.path.dirname(__file__) + application.config['UPLOAD_FOLDER'],
                                filename)
 
 
-@server.route('/listdealershipsbydonthavecar')
+@application.route('/listdealershipsbydonthavecar')
 def listdealershipsbydonthavecar():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -774,7 +777,7 @@ def listdealershipsbydonthavecar():
     return jsonify(data=data)
 
 
-@server.route('/associatecaranddealership', methods=['GET', 'POST'])
+@application.route('/associatecaranddealership', methods=['GET', 'POST'])
 def associatecaranddealership():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -795,7 +798,7 @@ def associatecaranddealership():
     return redirect(url_for('listdealershipsbydonthavecar'))
 
 
-@server.route('/listdealershipsbyhavingcar')
+@application.route('/listdealershipsbyhavingcar')
 def listdealershipsbyhavingcar():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -814,7 +817,7 @@ def listdealershipsbyhavingcar():
     return jsonify(data=data)
 
 
-@server.route('/dissociatecaranddealership', methods=['GET', 'POST'])
+@application.route('/dissociatecaranddealership', methods=['GET', 'POST'])
 def dissociatecaranddealership():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -835,14 +838,14 @@ def dissociatecaranddealership():
     return redirect(url_for('listdealershipsbyhavingcar'))
 
 
-@server.route("/mydealerships", methods=['GET', 'POST'])
+@application.route("/mydealerships", methods=['GET', 'POST'])
 def mydealerships():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     return render_template('mydealerships.html')
 
 
-@server.route("/listmydealerships", methods=['GET', 'POST'])
+@application.route("/listmydealerships", methods=['GET', 'POST'])
 def listmydealerships():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -874,7 +877,7 @@ def listmydealerships():
     return jsonify(data=data)
 
 
-@server.route("/mydealershipdetails", methods=['GET', 'POST'])
+@application.route("/mydealershipdetails", methods=['GET', 'POST'])
 def mydealershipdetails():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -882,7 +885,7 @@ def mydealershipdetails():
     return render_template('mydealershipdetails.html')
 
 
-@server.route("/listmydealershipdetails", methods=['GET', 'POST'])
+@application.route("/listmydealershipdetails", methods=['GET', 'POST'])
 def listmydealershipdetails():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -902,7 +905,7 @@ def listmydealershipdetails():
     return jsonify(data=data)
 
 
-@server.route("/listmydealershipdetails2", methods=['GET', 'POST'])
+@application.route("/listmydealershipdetails2", methods=['GET', 'POST'])
 def listmydealershipdetails2():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -917,14 +920,14 @@ def listmydealershipdetails2():
     return jsonify(data2=data2)
 
 
-@server.route("/newdealership", methods=['GET', 'POST'])
+@application.route("/newdealership", methods=['GET', 'POST'])
 def newdealership():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     return render_template('newdealership.html')
 
 
-@server.route("/new_dealership", methods=['GET', 'POST'])
+@application.route("/new_dealership", methods=['GET', 'POST'])
 def new_dealership():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -945,7 +948,7 @@ def new_dealership():
     return render_template('newdealership.html')
 
 
-@server.route("/editdealership", methods=['GET', 'POST'])
+@application.route("/editdealership", methods=['GET', 'POST'])
 def editdealership():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -954,7 +957,7 @@ def editdealership():
     return render_template('editdealership.html')
 
 
-@server.route("/edit_dealership", methods=['GET', 'POST'])
+@application.route("/edit_dealership", methods=['GET', 'POST'])
 def edit_dealership():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -980,21 +983,21 @@ def edit_dealership():
     #return render_template('newdealership.html')
 
 
-@server.route("/dealership", methods=['GET', 'POST'])
+@application.route("/dealership", methods=['GET', 'POST'])
 def dealership():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     return render_template('owner_home.html')
 
 
-@server.route("/account", methods=['GET', 'POST'])
+@application.route("/account", methods=['GET', 'POST'])
 def account():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
     return render_template('account.html')
 
 
-@server.route("/editaccount", methods=['GET', 'POST'])
+@application.route("/editaccount", methods=['GET', 'POST'])
 def editaccount():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -1023,7 +1026,7 @@ def editaccount():
     return jsonify(data)
 
 
-@server.route("/deleteaccount", methods=['POST'])
+@application.route("/deleteaccount", methods=['POST'])
 def deleteaccount():
     if not session.get('logged_in'):
         return redirect(url_for('login'))
@@ -1049,7 +1052,8 @@ def deleteaccount():
     return redirect(url_for('login'))
 
 
-if __name__ == '__main__':
-    server.secret_key = 'teste'
-    server.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
-    server.run(debug=True)
+'''if __name__ == '__main__':
+    application.secret_key = 'teste'
+    application.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+    application.run(debug=True)
+'''
