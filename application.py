@@ -113,7 +113,7 @@ def listclients():
     data = []
     for item in userlist:
         data.append({'name': item.name, 'email': item.email})
-    print(data)
+    #print(data)
     return jsonify(data=data)
 
 
@@ -141,7 +141,7 @@ def listmycars():
     for item in carslist:
         data.append({'id': item.carid, 'brand': item.brand,
                      'model': item.model, 'fuel': item.fuel, 'price': item.price, 'kms': item.kms, 'year': item.year})
-    print(data)
+    #print(data)
     return jsonify(data=data)
 
 
@@ -911,7 +911,7 @@ def listsearchedcars():
         data.append({'id': item.carid, 'brand': item.brand,
                      'model': item.model, 'fuel': item.fuel,
                      'price': item.price, 'kms': item.kms, 'year': item.year, 'dealership': asdf, 'district': fdsa})
-    print(data)
+    #print(data)
     return jsonify(data=data)
 
 
@@ -979,7 +979,7 @@ def edit_car():
 
     dbsession.close()
     data = {'brand': car.brand, 'model': car.model, 'fuel': car.fuel, 'price': car.price, 'kms': car.kms, 'year': car.year}
-    print(data)
+    #print(data)
     return jsonify(data)
 
 
@@ -1052,7 +1052,7 @@ def listdealershipsbydonthavecar():
     data = []
     for item in dealslist:
         data.append({'id': item.dealershipid, 'name': item.name, 'contact': item.contact, 'district': item.district})
-    print(data)
+    #print(data)
     return jsonify(data=data)
 
 
@@ -1092,7 +1092,7 @@ def listdealershipsbyhavingcar():
     data = []
     for item in dealslist:
         data.append({'id': item.dealershipid, 'name': item.name, 'contact': item.contact, 'district': item.district})
-    print(data)
+    #print(data)
     return jsonify(data=data)
 
 
@@ -1142,17 +1142,17 @@ def listmydealerships():
         data.append({'id': item.dealershipid, 'name': item.name, 'contact': item.contact, 'district': item.district})
 
     if request.method == 'POST':
-        print('Post')
+        #print('Post')
         if request.json['orientation'] == 'ASC':
             data.sort(key=lambda x: x['name'])
         else:
             print('Reverse')
             data.sort(key=lambda x: x['name'], reverse=True)
 
-    print(data[0]['name'])
+    #print(data[0]['name'])
     if request.method == 'GET':
         data.sort(key=lambda x: x['name'])
-    print(data)
+    #print(data)
     return jsonify(data=data)
 
 
@@ -1180,7 +1180,7 @@ def listmydealershipdetails():
     for item in carslist:
         data.append({'id': item.carid, 'brand': item.brand,
                      'model': item.model, 'fuel': item.fuel, 'price': item.price, 'kms': item.kms,'year': item.year})
-    print(data)
+    #print(data)
     return jsonify(data=data)
 
 
@@ -1195,7 +1195,7 @@ def listmydealershipdetails2():
     dealershipinfo = dbsession.query(Dealership).filter_by(dealershipid=session['dealership']).first()
     dbsession.close()
     data2 = [{'name': dealershipinfo.name, 'contact': dealershipinfo.contact, 'district': dealershipinfo.district}]
-    print(data2)
+    #print(data2)
     return jsonify(data2=data2)
 
 
@@ -1293,7 +1293,7 @@ def editaccount():
         useraccount.name = request.json['name']
         useraccount.district = request.json['district']
         session['user_name'] = useraccount.name
-        print(request.json)
+        #print(request.json)
         useraccount.password = request.json['password']
         dbsession.commit()
 

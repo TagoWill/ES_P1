@@ -69,17 +69,17 @@ var MyCars = React.createClass({
         return (
             <table>
                 <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Fuel</th>
-                    <th>Price</th>
-                    <th>Kms</th>
-                    <th>Year</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
+                    <tr>
+                        <td>Image</td>
+                        <td>Brand</td>
+                        <td>Model</td>
+                        <td>Fuel</td>
+                        <td>Price</td>
+                        <td>Kms</td>
+                        <td>Year</td>
+                        <td>Edit</td>
+                        <td>Delete</td>
+                    </tr>
                 </thead>
                 <tbody>
                     {this.state.listofcars.map(this.createlistcars)}

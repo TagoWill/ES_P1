@@ -117,11 +117,12 @@ var ListSearchedCars = React.createClass({
 
     render: function() {
         var createItem = function(item) {
-            var linha = [<td>
-                    <a href={'cardetail?id='+item.id}>{item.brand}</a></td>,<td>{item.model}</td>,
-                            <td>{item.fuel}</td>,<td>{item.price}€</td>,<td>{item.kms}Kms</td>,<td>{item.year}</td>,
-                            <td>{item.dealership}</td>,<td>{item.district}</td>];
-            return (<tr>{linha}</tr>)
+            var linha = [
+                <td><img src={"https://s3-eu-west-1.amazonaws.com/esimages3bucket/"+item.id + ".jpg"} alt="Imagem em falta" height="100" width="120"/></td>,
+                <td>{item.brand}</td>,<td>{item.model}</td>,
+                <td>{item.fuel}</td>,<td>{item.price}€</td>,<td>{item.kms}Kms</td>,<td>{item.year}</td>,
+                <td>{item.dealership}</td>,<td>{item.district}</td>];
+            return (<tr>{linha}<br></br></tr>)
         };
 
         var iteracaoDosModels = function (item) {
@@ -132,14 +133,17 @@ var ListSearchedCars = React.createClass({
             <div id="search_div">
                 <form onSubmit={this.handleSubmit}>
                     <table>
+                        <thead>
                         <tr>
                             <td>Brand</td>
                             <td>Model</td>
                             <td>Fuel</td>
                             <td>Minimum Price (€)</td>
                             <td>Maximum Price (€)</td>
-                            <td>Kilometers Range</td>
+                            <td>Kilometers</td>
+                            <td>Location</td>
                         </tr>
+                        </thead>
                         <tr>
                             <td><select onChange={this.car_searchChange_brand} value={this.state.car_search_brand}>
                                 <option>All</option>
@@ -195,23 +199,26 @@ var ListSearchedCars = React.createClass({
                                 <option>{"<="}300.000</option>
                                 <option>>300.000</option>
                             </select></td>
-                            <td><input type="checkbox" name="district" onChange={this.car_searchChange_district} value={this.state.car_search_district}/>In My District </td>
-                            <td><input type="submit" value="Search"/></td>
+                            <td><input type="checkbox" name="district" onChange={this.car_searchChange_district} value={this.state.car_search_district}/> In My District</td>
                         </tr>
                     </table>
+                    <br></br>
+                    <input type="submit" value="Search"/>
                 </form>
+                <br></br>
                 <form onSubmit={this.handleSubmit}>
                     <table>
                         <thead>
                         <tr>
-                            <th>Brand</th>
-                            <th>Model</th>
-                            <th>Fuel</th>
-                            <th>Price</th>
-                            <th>Kilometers</th>
-                            <th>Year</th>
-                            <th>Dealership</th>
-                            <th>District</th>
+                            <td>Image</td>
+                            <td>Brand</td>
+                            <td>Model</td>
+                            <td>Fuel</td>
+                            <td>Price</td>
+                            <td>Kilometers</td>
+                            <td>Year</td>
+                            <td>Dealership</td>
+                            <td>District</td>
                         </tr>
                         </thead>
                         <tbody>
@@ -229,7 +236,7 @@ var CarsFOUNDMsg = React.createClass({
         console.log(ListSearchedCars.listofcars);
         return (
             <div id="actionmsg_div">
-                Cars Found!
+                <h3>Cars Found!</h3>
             </div>
         )
     }
@@ -239,10 +246,11 @@ var CarsNOTFOUNDMsg = React.createClass({
     render: function() {
         return (
             <div id="actionmsg_div">
-                Cars Not Found!
+                <h3>Cars Not Found!</h3>
             </div>
         )
     }
 });
 
 ReactDOM.render(<ListSearchedCars />, list_searchedcars);
+

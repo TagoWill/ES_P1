@@ -24,9 +24,13 @@ var MyDealerships = React.createClass({
         });
     },
 
+    changepage2: function () {
+
+    },
+
     handleSubmit: function (e){
         e.preventDefault()
-        console.log('cheguei aqui')
+        //console.log('cheguei aqui')
 
         if(this.state.orientation == 'ASC'){
             this.setState({orientation: 'DES'});
@@ -59,21 +63,21 @@ var MyDealerships = React.createClass({
 
         return (
             <form onSubmit={this.handleSubmit}>
-                <button type="submit">Sort</button>
-            <table>
-                <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Contact</th>
-                    <th>District</th>
-                    <th>Edit</th>
-                </tr>
-                </thead>
-                <tbody>
-                    {this.state.listofdeals.map(createItem)}
-                </tbody>
-            </table>
-
+                <input type="submit" value="Sort By Name"/>
+                <br></br><br></br>
+                <table>
+                    <thead>
+                    <tr>
+                        <td>Name</td>
+                        <td>Contact</td>
+                        <td>District</td>
+                        <td>Edit</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.listofdeals.map(createItem)}
+                    </tbody>
+                </table>
             </form>
       )
     }

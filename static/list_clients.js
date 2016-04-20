@@ -49,33 +49,29 @@ var ListClients = React.createClass({
     },
 
     render: function() {
-
-        var linha = [<td><b>name</b></td>,<td><b>email</b></td>]
         var createItem = function(item) {
-            var linha = [<td>
-                    <a href={'clientdetail?email='+item.email}>{item.name}</a></td>,<td>{item.email}</td>]
+            var linha = [<td>{item.name}</td>,<td>{item.email}</td>,<td>{item.district}</td>]
             return (<tr>{linha}</tr>)
         };
 
         return (
             <form onSubmit={this.handleSubmit}>
-            <table>
-                <thead>
-                <tr>
-                    <th>Client</th>
-                </tr>
-                <tr>
-                    <td><input type="text" onChange={this.so_searchChange} value={ this.state.so_search}/></td>
-                    <td><input type="submit" name="search"/></td>
-                </tr>
-                    <tr>
-                        {linha}
-                    </tr>
-                </thead>
-                <tbody>
-                    {this.state.listofusers.map(createItem)}
-                </tbody>
-            </table>
+                <input type="text" placeholder="Type name here" onChange={this.so_searchChange} value={this.state.so_search}/>
+                <br></br><br></br>
+                <input type="submit" name="search" value="Search"/>
+                <br></br><br></br>
+                <table>
+                    <thead>
+                        <tr>
+                            <td><b>Name</b></td>
+                            <td><b>Email</b></td>
+                            <td><b>District</b></td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.listofusers.map(createItem)}
+                    </tbody>
+                </table>
             </form>
       )
     }

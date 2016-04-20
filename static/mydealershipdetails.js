@@ -47,8 +47,7 @@ var MyDealershipDetails = React.createClass({
     createlistcars: function (item) {
         var linha = [
             <td><img src={"/static/image/"+item.id + ".jpg"} alt="pic1" height="100" width="120"/></td>,
-            <td>
-                <a href={'detailcar?id='+item.id}>{item.brand}</a></td>,
+            <td>{item.brand}</td>,
             <td>{item.model}</td>,
             <td>{item.fuel}</td>,
             <td>{item.price}€</td>,
@@ -62,25 +61,25 @@ var MyDealershipDetails = React.createClass({
     render: function() {
         return (
             <div>
-            {this.state.info.map(this.createinfo)}
-            <table>
-                <thead>
-                <tr>
-                    <th>Image</th>
-                    <th>Brand</th>
-                    <th>Model</th>
-                    <th>Fuel</th>
-                    <th>Price</th>
-                    <th>Kilometers</th>
-                    <th>Year</th>
-                    <th>Edit</th>
-                    <th>Delete</th>
-                </tr>
-                </thead>
-                <tbody>
-                {this.state.listofcars.map(this.createlistcars)}
-                </tbody>
-            </table>
+                {this.state.info.map(this.createinfo)}
+                <table>
+                    <thead>
+                        <tr>
+                            <td>Image</td>
+                            <td>Brand</td>
+                            <td>Model</td>
+                            <td>Fuel</td>
+                            <td>Price</td>
+                            <td>Kilometers</td>
+                            <td>Year</td>
+                            <td>Edit</td>
+                            <td>Delete</td>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {this.state.listofcars.map(this.createlistcars)}
+                    </tbody>
+                </table>
             </div>
         )
     }

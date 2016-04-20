@@ -1,11 +1,14 @@
 {% extends "layout_owner.html" %}
 {% block body %}
     <br>
-    <h2>My Dealerships</h2>
+    <div class="textcolor">
+        <h2>My Dealerships</h2>
+    </div>
     <br>
     <div class="contentdesign">
         <br>
-        <a href="{{ url_for('newdealership') }}">New Dealership</a>
+        <a href="{{ url_for('newdealership') }}" class="btn btn-primary"><span class="glyphicon glyphicon-plus-sign"></span> New Dealership</a>
+        <br><br>
         <div id="list_mydealerships"></div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>

@@ -117,13 +117,13 @@ var EditAccount = React.createClass({
                     Email: <input type="text" onChange={this.emailChange} value={this.state.email}/>
                     <br></br>
                     <br></br>
-                    district: <input type="text" onChange={this.districtChange} value={this.state.district}/>
+                    District: <input type="text" onChange={this.districtChange} value={this.state.district}/>
                     <br></br>
                     <br></br>
                     Password: <input type="password" onChange={this.passChange} value={this.state.password}/>
                     <br></br>
                     <br></br>
-                    <input type="submit" value="Save Modifications"/>
+                    <input type="submit" value="Save Changes"/>
                 </form>
                 <br></br>
                 <br></br>
