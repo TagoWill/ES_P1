@@ -1,8 +1,10 @@
 {% extends "layout_owner.html" %}
 {% block body %}
-    <br><br><br><br><br>
-    <h2>Welcome Owner
-    {% if session.user_name %}
-        {{ session.user_name }}
-    {% endif %}</h2>
+    <div class="imageowner">
+        <br><br><br><br><br><br>
+        <h2>Welcome
+        {% if session.user_name %}
+            {{ session.user_name }}
+        {% endif %}</h2>
+    </div>
 {% endblock %}

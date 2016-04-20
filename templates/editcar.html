@@ -2,17 +2,17 @@
 {% block body %}
     <br>
     <h2>Edit Car</h2>
-    <div id="editcar"></div>
-
-    <form action="{{ url_for('image') }}" method="post" enctype="multipart/form-data">
-        <input type=file name=file>
-        <input type=submit value=Upload>
-    </form>
-
-    <div id="association"></div>
-    <div id="dissociation"></div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
+    <br>
+    <div class="contentdesign">
+        <br>
+        <div id="editcar"></div>
+        <form action="{{ url_for('image') }}" method="post" enctype="multipart/form-data">
+            <input type=file name=file>
+            <input type=submit value=Upload>
+        </form>
+        <div id="association"></div>
+        <div id="dissociation"></div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
@@ -20,4 +20,6 @@
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
         <script type="text/babel" src="{{ url_for('static', filename='editcar.js') }}"></script>
         {% if error %}<p class=error><strong>Error:</strong> {{ error }}{% endif %}
+        <br>
+    </div>
 {% endblock %}

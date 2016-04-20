@@ -39,9 +39,9 @@ var MyDealershipDetails = React.createClass({
 
     createinfo: function (item) {
         var infotext = [
-            <h2>{item.name} Details</h2>,
+            <h2>Name: {item.name}</h2>,
             <h3>Location: {item.district}</h3>];
-        return (<div>{infotext}</div>)
+        return (<div><br>{infotext}</br></div>)
     },
 
     createlistcars: function (item) {
