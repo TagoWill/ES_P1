@@ -112,7 +112,7 @@ def listclients():
     dbsession.close()
     data = []
     for item in userlist:
-        data.append({'name': item.name, 'email': item.email})
+        data.append({'name': item.name, 'email': item.email, 'district': item.district})
     #print(data)
     return jsonify(data=data)
 
