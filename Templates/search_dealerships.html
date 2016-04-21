@@ -1,0 +1,25 @@
+{% if session.user_type == 'client' %}
+    {% extends "layout_client.html" %}
+    {% else %}
+    {% extends "layout_owner.html" %}
+{% endif %}
+{% block body %}
+    <br>
+    <h2 class="textcolor">Search Dealerships</h2>
+    <br>
+    <div class="contentdesign">
+        <br>
+        {% if session.logged_in %}
+            <div id="searchdealerships"></div>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/react/0.14.7/react-dom.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.23/browser.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/0.3.5/marked.min.js"></script>
+            <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+            <script type="text/babel" src="{{ url_for('static', filename='list_searcheddealerships.js') }}"></script>
+            <div id="actionmsg"></div>
+        {% endif %}
+        <br>
+    </div>
+{% endblock %}

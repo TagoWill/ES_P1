@@ -27,7 +27,7 @@ var ListClients = React.createClass({
 
     handleSubmit: function (e){
         e.preventDefault()
-        console.log('cheguei aqui')
+        //console.log('cheguei aqui')
 
         var data ={
             so_search: this.state.so_search
@@ -44,7 +44,7 @@ var ListClients = React.createClass({
 		});
     },
 
-        so_searchChange: function (e) {
+    so_searchChange: function (e) {
         this.setState({so_search: e.target.value})
     },
 

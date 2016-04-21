@@ -21,7 +21,6 @@ var AddCar = React.createClass({
             //error: this.handleSubmitFailure,
             success: this.changepage
 		});
-
   },
 
 
@@ -37,7 +36,7 @@ var AddCar = React.createClass({
             year: this.state.year
         }
 
-        console.log(data)
+        //console.log(data)
 
         $.ajax({
             type: "POST",
@@ -51,8 +50,8 @@ var AddCar = React.createClass({
     },
 
     changepage: function (result) {
-        console.log(result);
-        console.log(result.brand);
+        //console.log(result);
+        //console.log(result.brand);
         this.setState({brand: result.brand})
         this.setState({model: result.model})
         this.setState({fuel: result.fuel})
@@ -86,18 +85,17 @@ var AddCar = React.createClass({
     },
 
     handleFile: function(e) {
-    var self = this;
-    var reader = new FileReader();
-    var file = e.target.files[0];
+        var self = this;
+        var reader = new FileReader();
+        var file = e.target.files[0];
 
-    reader.onload = function(upload) {
-      self.setState({
-        data_uri: upload.target.result,
-      });
-    }
-
-    reader.readAsDataURL(file);
-  },
+        reader.onload = function(upload) {
+            self.setState({
+                data_uri: upload.target.result,
+            });
+        }
+        reader.readAsDataURL(file);
+    },
 
     handleImages: function (e) {
         e.preventDefault()
@@ -105,7 +103,6 @@ var AddCar = React.createClass({
 
     render: function() {
         return (
-            
                 <form onSubmit={this.handleSubmit}>
                     <br></br>
                     Brand: <input type="text" onChange={this.brandChange} value={ this.state.brand}/>
@@ -128,8 +125,7 @@ var AddCar = React.createClass({
                     <br></br>
                     <input type="submit" value="Save"/>
                 </form>
-
-      )
+        )
     }
 });
 
@@ -158,8 +154,7 @@ var Association = React.createClass({
 
     associateDealership: function (e){
         e.preventDefault()
-        console.log('dealership: '+this.state.selecteddealership);
-
+        //console.log('dealership: '+this.state.selecteddealership);
 
         var data = {
             selecteddealership: this.state.selecteddealership,
@@ -177,7 +172,7 @@ var Association = React.createClass({
     },
 
     changeDealership: function (result) {
-        console.log(result.data);
+        //console.log(result.data);
         this.setState({
             listofdealeships: result.data
         });
@@ -191,7 +186,7 @@ var Association = React.createClass({
     },
 
     createlistdealerships: function (item, id) {
-        console.log(item.id);
+        //console.log(item.id);
         return (<option value={item.id}>{item.name}</option>)
     },
 
@@ -199,13 +194,13 @@ var Association = React.createClass({
     render: function() {
         return (
             <div id="assocation">
-            <p>Association</p>
+            <h3>Associate Car to Dealership</h3>
                 <form onSubmit={this.associateDealership}>
                     <select name="play" onChange={this.changeSelectedDealership} value={this.state.selecteddealership}>
                         <option value="50"> </option>
                         {this.state.listofdealeships.map(this.createlistdealerships)}
                     </select>
-                    <button type="submit">Associate</button>
+                    <input type="submit" value="Associate"/>
                 </form>
             </div>
       )
@@ -237,7 +232,7 @@ var Desassociation = React.createClass({
 
     associateDealership: function (e){
         e.preventDefault()
-        console.log('dealership: '+this.state.selecteddealership);
+        //console.log('dealership: '+this.state.selecteddealership);
 
 
         var data = {
@@ -256,7 +251,7 @@ var Desassociation = React.createClass({
     },
 
     changeDealership: function (result) {
-        console.log(result.data);
+        //console.log(result.data);
         this.setState({
             listofdealeships: result.data
         });
@@ -270,7 +265,7 @@ var Desassociation = React.createClass({
     },
 
     createlistdealerships: function (item, id) {
-        console.log(item.id);
+        //console.log(item.id);
         return (<option value={item.id}>{item.name}</option>)
     },
 
@@ -278,13 +273,13 @@ var Desassociation = React.createClass({
     render: function() {
         return (
             <div id="Dissocation">
-            <p>Dissociation</p>
+            <h3>Dissociate Car from Dealership</h3>
                 <form onSubmit={this.associateDealership}>
                     <select name="play" onChange={this.changeSelectedDealership} value={this.state.selecteddealership}>
                         <option value="50"> </option>
                         {this.state.listofdealeships.map(this.createlistdealerships)}
                     </select>
-                    <button type="submit">Dissociate</button>
+                    <input type="submit" value="Dissociate"/>
                 </form>
             </div>
       )

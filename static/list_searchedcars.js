@@ -11,11 +11,12 @@ var ListSearchedCars = React.createClass({
         car_search_kmrange: 'All',
         car_search_year: 'All',
         car_search_district: '0',
-        list_of_models: []
+        list_of_models: [],
+        sort_by: 'Sort by Brand (A-Z)'
     };
   },
 
-    /*componentDidMount: function() {
+    componentDidMount: function() {
         $.ajax({
             type: "GET",
             url: '/listsearchedcars',
@@ -24,7 +25,7 @@ var ListSearchedCars = React.createClass({
             success: this.changepage
 		});
 
-  },*/
+    },
 
     changepage: function (result) {
         //console.log("result: "+result.data);
@@ -36,6 +37,12 @@ var ListSearchedCars = React.createClass({
         } else {
             ReactDOM.render(<CarsNOTFOUNDMsg/>, actionmsg);
         }
+    },
+
+    change_sort_by: function (e) {
+        this.setState({
+                sort_by: e.target.value
+        });
     },
 
     handleSubmit: function (e){
@@ -50,7 +57,8 @@ var ListSearchedCars = React.createClass({
             car_search_maxprice: this.state.car_search_maxprice,
             car_search_kmrange: this.state.car_search_kmrange,
             car_search_year: this.state.car_search_year,
-            car_search_district: this.state.car_search_district
+            car_search_district: this.state.car_search_district,
+            sort_by: this.state.sort_by
         }
 
         $.ajax({
@@ -203,6 +211,15 @@ var ListSearchedCars = React.createClass({
                         </tr>
                     </table>
                     <br></br>
+                    <select onChange={this.change_sort_by} value={this.state.sort_by}>
+                        <option>Sort by Brand (A-Z)</option>
+                        <option>Sort by Brand (Z-A)</option>
+                        <option>Sort by Brand and Model (A-Z)</option>
+                        <option>Sort by Brand and Model (Z-A)</option>
+                        <option>Sort by Price (Ascending)</option>
+                        <option>Sort by Price (Descending)</option>
+                    </select>
+                    <br></br><br></br>
                     <input type="submit" value="Search"/>
                 </form>
                 <br></br>
