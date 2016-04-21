@@ -24,10 +24,6 @@ var MyDealerships = React.createClass({
         });
     },
 
-    changepage2: function () {
-
-    },
-
     handleSubmit: function (e){
         e.preventDefault()
         //console.log('cheguei aqui')
@@ -55,15 +51,14 @@ var MyDealerships = React.createClass({
 
     render: function() {
         var createItem = function(item) {
-            var linha = [<td>
-                    <a href={'mydealershipdetails?id='+item.id}>{item.name}</a></td>,
-                                    <td>{item.contact}</td>,<td>{item.district}</td>, <td><a href={'editdealership?id='+item.id}>click</a></td>]
+            var linha = [<td><a href={'mydealershipdetails?id='+item.id}>{item.name}</a></td>,
+                <td>{item.contact}</td>,<td>{item.district}</td>,<td><a href={'editdealership?id='+item.id}>Click Here To Edit</a></td>]
             return (<tr>{linha}</tr>)
         };
 
         return (
             <form onSubmit={this.handleSubmit}>
-                <input type="submit" value="Sort By Name"/>
+                <input type="submit" value="Sort by Name"/>
                 <br></br><br></br>
                 <table>
                     <thead>

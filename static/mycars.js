@@ -7,6 +7,7 @@ var MyCars = React.createClass({
         dl_search: '',
         selectedcar: '1',
         selecteddealership: '1',
+        sort_by: 'Sort by Brand (A-Z)'
     };
   },
 
@@ -25,15 +26,6 @@ var MyCars = React.createClass({
             data: '',
             //error: this.handleSubmitFailure,
             success: this.changeDealership
-
-                /*for (var i = 0; i < resulte.data.length; i++) {
-                    var option = resulte.data[i];
-                    console.log(option);
-                    this.state.listofdealeships.push(
-                        <option key={i} value={option.id}>{option.name}</option>
-                    );
-                }*/
-
 		});
   },
 
@@ -49,6 +41,31 @@ var MyCars = React.createClass({
         this.setState({
                 listofcars: result.data
         });
+    },
+
+    change_sort_by: function (e) {
+        this.setState({
+                sort_by: e.target.value
+        });
+    },
+    
+    handleSubmit: function (e){
+        e.preventDefault()
+        //console.log('cheguei aqui')
+
+        var data ={
+            sort_by: this.state.sort_by
+        };
+
+        $.ajax({
+            type: "POST",
+            url: '/listmycars',
+            data: JSON.stringify(data),
+            contentType: 'application/json;charset=UTF-8',
+            dataType: 'json',
+            //error: this.handleSubmitFailure,
+            success: this.changepage
+		});
     },
 
     createlistcars: function (item) {
@@ -67,8 +84,21 @@ var MyCars = React.createClass({
 
     render: function() {
         return (
-            <table>
-                <thead>
+            <div>
+                <form onSubmit={this.handleSubmit}>
+                    <select onChange={this.change_sort_by} value={this.state.sort_by}>
+                        <option>Sort by Brand (A-Z)</option>
+                        <option>Sort by Brand (Z-A)</option>
+                        <option>Sort by Brand and Model (A-Z)</option>
+                        <option>Sort by Brand and Model (Z-A)</option>
+                        <option>Sort by Price (Ascending)</option>
+                        <option>Sort by Price (Descending)</option>
+                    </select>
+                    <input type="submit" value="Sort Cars"/>
+                </form>
+                <br></br><br></br>
+                <table>
+                    <thead>
                     <tr>
                         <td>Image</td>
                         <td>Brand</td>
@@ -80,11 +110,12 @@ var MyCars = React.createClass({
                         <td>Edit</td>
                         <td>Delete</td>
                     </tr>
-                </thead>
-                <tbody>
-                    {this.state.listofcars.map(this.createlistcars)}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                        {this.state.listofcars.map(this.createlistcars)}
+                    </tbody>
+                </table>
+            </div>
       )
     }
 });

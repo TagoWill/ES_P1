@@ -141,6 +141,22 @@ def listmycars():
     for item in carslist:
         data.append({'id': item.carid, 'brand': item.brand,
                      'model': item.model, 'fuel': item.fuel, 'price': item.price, 'kms': item.kms, 'year': item.year})
+
+    if request.method == 'POST':
+        #print(request.json['sort_by'])
+        if request.json['sort_by'] == 'Sort by Brand (A-Z)':
+            data.sort(key=lambda x: x['brand'])
+        elif request.json['sort_by'] == 'Sort by Brand (Z-A)':
+            data.sort(key=lambda x: x['brand'], reverse=True)
+        elif request.json['sort_by'] == 'Sort by Brand and Model (A-Z)':
+            data.sort(key=lambda x: (x['brand'], x['model']))
+        elif request.json['sort_by'] == 'Sort by Brand and Model (Z-A)':
+            data.sort(key=lambda x: (x['brand'], x['model']), reverse=True)
+        elif request.json['sort_by'] == 'Sort by Price (Descending)':
+            data.sort(key=lambda x: x['price'], reverse=True)
+        else:
+            data.sort(key=lambda x: x['price'])
+
     #print(data)
     return jsonify(data=data)
 
@@ -1146,7 +1162,7 @@ def listmydealerships():
         if request.json['orientation'] == 'ASC':
             data.sort(key=lambda x: x['name'])
         else:
-            print('Reverse')
+            #print('Reverse')
             data.sort(key=lambda x: x['name'], reverse=True)
 
     #print(data[0]['name'])
